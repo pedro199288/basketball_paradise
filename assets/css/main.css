@@ -1,0 +1,31 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+    position: relative;
+}
+
+body {
+    min-height: 100vh;
+}
+
+footer {
+    position: absolute!important;
+    bottom: 0;
+}
+/* general */
+.bg-page {
+  background: linear-gradient(135deg, rgb(48, 34, 58), rgb(241, 56, 0) 75%);
+}
+
+.main-container {
+    flex-wrap: wrap;
+    padding-bottom: 15rem;
+}
+
+/* header */
+.logo-header {
+    height: 4rem;
+    width: 20rem;
+}

@@ -1,4 +1,0 @@
-probar edición
-probar registro
-probar login
-programar logout y probar

@@ -52,17 +52,17 @@ checkPermisos($currentUser, ['cliente', 'admin', 'moderador']);
                         <div class="form-group">
                             <label for="rol">Elige un rol</label>
                             <select class="form-control" name="rol" id="rol">
-                                <option <?= $currentUser->getRole() == 'cliente' ? 'selected' : '' ?> value="cliente">Cliente</option>
-                                <option <?= $currentUser->getRole() == 'moderador' ? 'selected' : '' ?> value="moderador">Moderador</option>
-                                <option <?= $currentUser->getRole() == 'admin' ? 'selected' : '' ?> value="admin">Admin</option>
+                                <option <?= $currentUser->getRol() == 'cliente' ? 'selected' : '' ?> value="cliente">Cliente</option>
+                                <option <?= $currentUser->getRol() == 'moderador' ? 'selected' : '' ?> value="moderador">Moderador</option>
+                                <option <?= $currentUser->getRol() == 'admin' ? 'selected' : '' ?> value="admin">Admin</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="status">Tu contraseña</label>
+                            <label for="status"></label>
                             <select class="form-control" name="status" id="status">
-                                <option <?= $currentUser->getRole() == 'activo' ? 'selected' : '' ?> value="activo">activo</option>
-                                <option <?= $currentUser->getRole() == 'inactivo' ? 'selected' : '' ?> value="inactivo">inactivo</option>
-                                <option <?= $currentUser->getRole() == 'borrado' ? 'selected' : '' ?> value="borrado">borrado</option>
+                                <option <?= $currentUser->getRol() == 'activo' ? 'selected' : '' ?> value="activo">activo</option>
+                                <option <?= $currentUser->getRol() == 'inactivo' ? 'selected' : '' ?> value="inactivo">inactivo</option>
+                                <option <?= $currentUser->getRol() == 'borrado' ? 'selected' : '' ?> value="borrado">borrado</option>
                             </select>
                         </div>
                     <?php else : ?>

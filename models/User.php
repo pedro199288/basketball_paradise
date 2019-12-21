@@ -68,7 +68,7 @@ class User
     {
         return $this->email;
     }
-    
+
     public function getPassword()
     {
         return $this->password;
@@ -89,11 +89,7 @@ class User
         return conn();
     }
 
-    public function sayHello() {
-        echo $this->name;
-    }
-
-    /** Obtener todos los users de la bd */
+    /** get all users */
     public static function getAll()
     {
         try {
@@ -108,9 +104,9 @@ class User
 
     public function save($updating = false)
     {
-        if ($updating) {
-            // actualizar registro
-            try {
+        try {
+            if ($updating) {
+                // update registry
                 $stmt = self::db()->prepare("UPDATE users SET dni = :dni, name = :name, surname = :surname, email = :email, password = :password, rol = :rol, status = :status WHERE dni = :dni");
                 $stmt->execute([
                     ':dni' => $this->dni,
@@ -121,20 +117,8 @@ class User
                     ':rol' => $this->rol,
                     ':status' => $this->status
                 ]);
-
-                if ($stmt->rowCount() > 0) {
-                    // se han insertado datos
-                    $response = ['type' => 'success', 'message' => 'Se ha guardado correctamente'];
-                } else {
-                    // ha habido algún error
-                    $response = ['type' => 'error', 'message' => 'Ha surgido un error al guardar'];
-                }
-            } catch (Exception $e) {
-                $response =  ['type' => 'error', 'message' => 'Error: ' . $e->getMessage()];
-            }
-        } else {
-            // guardar nuevo registro
-            try {
+            } else {
+                // new registry
                 $stmt = self::db()->prepare("INSERT INTO users VALUES(:dni, :name, :surname, :email, :password, :rol, :status)");
                 $stmt->execute([
                     ':dni' => $this->dni,
@@ -145,38 +129,33 @@ class User
                     ':rol' => $this->rol,
                     ':status' => $this->status
                 ]);
-
-                if ($stmt->rowCount() > 0) {
-                    // se han insertado datos
-                    $response = ['type' => 'success', 'message' => 'Se ha guardado correctamente'];
-                } else {
-                    // ha habido algún error
-                    $response = ['type' => 'error', 'message' => 'Ha surgido un error al guardar'];
-                }
-            } catch (Exception $e) {
-                $response =  ['type' => 'error', 'message' => 'Error: ' . $e->getMessage()];
             }
+            if ($stmt->rowCount() > 0) {
+                $response = ['type' => 'success', 'message' => 'Se ha guardado correctamente'];
+            } else {
+                $response = ['type' => 'error', 'message' => 'Ha surgido un error al guardar'];
+            }
+        } catch (Exception $e) {
+            $response =  ['type' => 'error', 'message' => 'Error: ' . $e->getMessage()];
         }
         return $response;
     }
 
     public static function delete($dni)
     {
-        // Borrar registro
         try {
             $stmt = self::db()->prepare("DELETE FROM users WHERE dni = :dni");
             $stmt->execute([':dni' => $dni]);
 
             if ($stmt->rowCount() > 0) {
-                // se han insertado datos
                 $response = ['type' => 'success', 'message' => 'Se ha borrado correctamente'];
             } else {
-                // ha habido algún error
                 $response = ['type' => 'error', 'message' => 'Ha surgido un error al borrar'];
             }
         } catch (Exception $e) {
             $response =  ['type' => 'error', 'message' => 'Error: ' . $e->getMessage()];
         }
+        return $response;
     }
 
     public static function getByDni($dni)
@@ -194,6 +173,7 @@ class User
         } catch (Exception $e) {
             $response =  ['type' => 'error', 'message' => 'Ha surgido un error: ' . $e->getMessage()];
         }
+        return $response;
     }
 
     public static function getByEmail($email)

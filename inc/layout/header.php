@@ -1,12 +1,17 @@
 <?php
-require 'config/config.php';
-require 'config/utils.php';
-require 'models/User.php';
-require 'config/sessions.php';
+$ROOT_PATH = $_SERVER['DOCUMENT_ROOT'] . '/tienda-online-daw/';
+require $ROOT_PATH . 'config/config.php';
+require $ROOT_PATH . 'config/db.php';
+require $ROOT_PATH . 'utils/utils.php';
+require $ROOT_PATH . 'models/User.php';
+require $ROOT_PATH . 'utils/sessions.php';
 
 // close session
-if(isset($_GET['logout'])){
+if (isset($_GET['logout'])) {
     $_SESSION['user'] = null;
+    $_SESSION['success_alerts'][] = 'Sesión cerrada correctamente!';
+    header("Location: " . RUTA_HOME . "index.php");
+    die();
 }
 
 // current user to use in the whole application
@@ -16,15 +21,15 @@ $currentUser = $_SESSION['user'] ?? null;
 $links = [
     [
         'text' => 'Inicio',
-        'link' => 'index.php'
+        'link' => RUTA_HOME . 'index.php'
     ],
     [
         'text' => 'Quienes Somos',
-        'link' => 'quienes-somos.php'
+        'link' => RUTA_HOME . 'quienes-somos.php'
     ],
     [
         'text' => 'Contacto',
-        'link' => 'products?category=tank_top'
+        'link' => RUTA_HOME . 'products?category=tank_top'
     ]
 ];
 
@@ -39,19 +44,20 @@ $links = [
     <title><?= $pageTitle ?? "Basketball's Paradise" ?></title>
     <meta name="description" content="<?= $pageDescription ?? "La mejor tienda online de baloncesto" ?>">
     <!-- link for bootstrap -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="assets/css/main.css">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="<?= RUTA_HOME ?>assets/css/bootstrap.css">
+    <link rel="stylesheet" href="<?= RUTA_HOME ?>assets/css/main.css">
 </head>
 
 <body class="d-flex">
-    <div class="container-lg main-container px-0">
+    <div class="col-12 main-container px-0">
         <header class="col-12 mb-3">
             <div class="row bg-page">
-                <div class="col-12">
+                <div class="container">
                     <div class="row">
                         <div class="col-12 d-flex justify-content-center">
-                            <a class="my-4  d-block logo-header" href="index.php">
-                                <img class="d-block" src="assets/img/logos/default-monochrome-white.svg" alt="Logo tienda">
+                            <a class="my-4 d-block logo-header" href="<?= RUTA_HOME ?>index.php">
+                                <img class="d-block" src="<?= RUTA_HOME ?>assets/img/logos/default-monochrome-white.svg" alt="Logo tienda">
                             </a>
                         </div>
                     </div>
@@ -65,4 +71,5 @@ $links = [
                 </div>
             </div>
         </header>
-        <?php showAlerts(); ?>
+        <div class="container-md">
+            <?php showAlerts(); ?>

@@ -7,7 +7,11 @@ $pageTitle = "Basketball Paradise - Destacados";
 $pageDescriprion = null;
 
 require './inc/layout/header.php';
+require './models/Category.php';
+require './models/Product.php';
 
+// Get all products to show in table
+$products = Product::getAll();
 ?>
 
 <div class="row justify-content-center">
@@ -17,14 +21,20 @@ require './inc/layout/header.php';
     <!-- Aside left -->
     <?php require './inc/layout/aside-left.php'; ?>
     <div class="col-md-7 border-right">
-        <h2>Productos destacados</h2>
-        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-3">
-            <div class="col">col</div>
-            <div class="col">col</div>
-            <div class="col">col</div>
-            <div class="col">col</div>
-            <div class="col">col</div>
-            <div class="col">col</div>
+        <h2>Productos más recientes</h2>
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-3 justify-content-around">
+            <?php foreach ($products as $product) : ?>
+                <div class="card product-card mx-1 my-1">
+                    <img src="<?= RUTA_HOME . 'assets/img/products/' . (!empty($product->getImage()) ? $product->getImage() : 'default.svg') ?>" class="card-img-top" alt="<?= $product->getName() ?>">
+                    <div class="card-body d-flex text-center flex-wrap">
+                        <div class="w-100 align-self-start">
+                            <h5 class="card-title"><?= $product->getName() ?></h5>
+                            <p class="card-text text-center font-weight-bold card-subtitle text-secondary my-1 h4"><?= $product->getPrice() . ' €' ?></p>
+                        </div>
+                        <a href="#" class="btn btn-primary btn-block mt-2 align-self-end">Comprar</a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </div>
     </div>
     <!-- Aside right -->

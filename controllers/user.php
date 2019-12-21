@@ -2,7 +2,7 @@
 require('../config/config.php');
 require('../config/db.php');
 require('../models/User.php');
-require('../config/sessions.php');
+require('../utils/sessions.php');
 
 // arrays to store messages
 $_SESSION['danger_alerts'] = [];
@@ -18,7 +18,7 @@ switch ($action) {
 
         //check if updating
         $updating = $_POST['updating'] ? true : false;
-        
+
         // validate fields: dni, email and password
         if (!empty($_POST['dni'])) {
             $dni = $_POST['dni'];

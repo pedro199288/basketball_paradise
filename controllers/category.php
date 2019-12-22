@@ -60,16 +60,16 @@ switch ($action) {
         // get the id
         $id = (int) $_GET['id'] ?? null;
 
-        // get categories which parent category is the one being deleted and set to 0
-        $response = Category::setTo0ByCategoryId($id);
+        // TODO: hacer la función para Product, ver como crear el json de categories
+        $response = Product::setToNullByCategoryId($id);
         if ($response['type'] == 'success') {
             $_SESSION['success_alerts'][] = $response['message'];
         } else {
             $_SESSION['danger_alerts'][] = $response['message'];
         }
 
-        // TODO: hacer la función para Product, ver como crear el json de categories
-        $response = Product::setToNullByCategoryId($id);
+        // get categories which parent category is the one being deleted and set to 0
+        $response = Category::setTo0ByCategoryId($id);
         if ($response['type'] == 'success') {
             $_SESSION['success_alerts'][] = $response['message'];
         } else {

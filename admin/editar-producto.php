@@ -93,6 +93,18 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete') : ?>
                             <?php endforeach; ?>
                         </optgroup>
                     <?php endforeach; ?>
+                    <optgroup label="Otras Categorías">
+                        <?php
+                        $categoriesWithoutParentNotMain = Category::getAllWithoutParentNotMain();
+                        foreach ($categoriesWithoutParentNotMain as $category) :
+                        ?>
+                            <option <?= in_array($category->getId(), ($product ? $product->getCategories() : [])) ? 'selected' : '' ?> value="<?= $category->getId() ?>">
+                                <?= $category->getName() ?>
+                            </option>
+                        <?php
+                        endforeach;
+                        ?>
+                    </optgroup>
                 </select>
             </div>
             <div class="form-group">

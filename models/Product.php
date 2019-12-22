@@ -5,11 +5,12 @@ class Product
 {
     private $id;
     private $name;
-    private $decription;
+    private $description;
     private $price;
     private $stock;
     private $categories;
     private $image;
+    private $modified;
 
     public function __construct()
     {
@@ -120,7 +121,7 @@ class Product
                 ]);
             } else {
                 // save new registry
-                $stmt = self::db()->prepare("INSERT INTO products VALUES(null, :name, :description, :price, :stock, :categories, :image)");
+                $stmt = self::db()->prepare("INSERT INTO products VALUES(null, :name, :description, :price, :stock, :categories, :image, NOW())");
                 $stmt->execute([
                     ':name' => $this->name,
                     ':description' => $this->description,
@@ -145,14 +146,44 @@ class Product
     public static function setToNullByCategoryId($categoryId)
     {
         try {
-            // TODO: VER COMO ACCEDER A LOS DATOS DEL JSON PARA COMPROBAR $categoryId
-            $stmt = self::db()->prepare("UPDATE products SET categories = NULL WHERE category_id = :category_id");
-            $stmt->execute([':category_id' => $categoryId]);
-
-            if ($stmt->rowCount() > 0) {
-                $response = ['type' => 'success', 'message' => 'Se han actualizado categorias hijas'];
+            $query = self::db()->query("SELECT * FROM products");
+            $query->setFetchMode(PDO::FETCH_CLASS, "Product");
+            $products = $query->fetchAll();
+            if (Category::getById($categoryId)->hasSubcategories()) {
+                // Si la categoría que se está borrando tiene categorías hijas, de momento no hacer nada en los productos, ya que estos se no se asocian a categorías genrales
+                // $filteredProducts = [];
+                // foreach (Category::getById($categoryId)->getSubcategories() as $subcategory) {
+                //     $subcategoryId = $subcategory->getId();                
+                //     $newProducts = array_filter($products, function ($p) use ($subcategoryId) {
+                //         return in_array($subcategoryId, $p->getCategories());
+                //     });
+                //     $newProducts = array_map(function ($p) use ($subcategoryId) {
+                //         $categories = $p->getCategories();
+                //         if (($key = array_search($subcategoryId, $categories)) !== false) {
+                //             unset($categories[$key]);
+                //             $p->setCategories(array_merge($categories));
+                //         }
+                //         return $p;
+                //     }, $newProducts);
+                //     $filteredProducts = array_merge($filteredProducts, $newProducts);
+                // }
+                // $filteredProducts = array_unique($filteredProducts, SORT_REGULAR);
             } else {
-                $response = ['type' => 'error', 'message' => 'No se han actualizado categorías hijas'];
+                $filteredProducts = array_filter($products, function ($p) use ($categoryId) {
+                    return in_array($categoryId, $p->getCategories());
+                });
+                $filteredProducts = array_map(function ($p) use ($categoryId) {
+                    $categories = $p->getCategories();
+                    if (($key = array_search($categoryId, $categories)) !== false) {
+                        unset($categories[$key]);
+                        $p->setCategories(array_merge($categories));
+                    }
+                    return $p;
+                }, $filteredProducts);
+            }
+            // remove categories from products
+            foreach($filteredProducts as $updatingProduct){
+                $updatingProduct->save(true);
             }
         } catch (Exception $e) {
             $response =  ['type' => 'error', 'message' => 'Error: ' . $e->getMessage()];
@@ -202,12 +233,16 @@ class Product
     {
         try {
             // TODO: ver como ver $categoryId en el JSON de categories
-            $stmt = self::db()->prepare("SELECT * FROM products WHERE category_id = :category_id");
+            $stmt = self::db()->prepare("SELECT * FROM products");
             $stmt->execute([':category_id' => $categoryId]);
-            $stmt->setFetchMode(PDO::FETCH_CLASS, "Category");
+            $stmt->setFetchMode(PDO::FETCH_CLASS, "Product");
             if ($stmt->rowCount() > 0) {
-                $categories = $stmt->fetchAll();
-                return $categories;
+                $products = $stmt->fetchAll();
+                // filter by cateogory
+                $products = array_filter($products, function ($p) use ($categoryId) {
+                    return in_array($categoryId, $p->getCategories());
+                });
+                return $products;
             } else {
                 $response = ['type' => 'error', 'message' => 'No se han encontrado datos'];
             }

@@ -3,15 +3,34 @@
 /** 
  * Change variables for title and description
  */
-$pageTitle = "Basketball Paradise";
-$pageDescriprion = null;
+$pageTitle = "Productos - Basketball Paradise";
+$pageDescriprion = "Explora todos nuestros productos de baloncesto. Zapatillas, camisetas NBA, pantalones...";
 
 require './inc/layout/header.php';
 require './models/Category.php';
 require './models/Product.php';
 
-// Get all products to show in table
-$products = Product::getAll();
+if (isset($_GET['c'])) {
+    $currentCategory = Category::getById($_GET['c']);
+    $products = [];
+    if ($currentCategory instanceof Category) {
+        if ($currentCategory->getCategoryId() === null) {
+            // get its subcategories
+            foreach ($currentCategory->getSubcategories() as $subCategories) {
+                $products = array_merge($products, Product::getByCategoryId($subCategories->getId()));
+            }
+        } else {
+            $products = array_merge($products, Product::getByCategoryId($currentCategory->getId()));
+        }
+        $products = array_unique($products, SORT_REGULAR);
+    } else {
+        header("Location: " . RUTA_HOME);
+        $_SESSION['danger_alerts'][] = 'Categoría no encontrada';
+        die();
+    }
+    $subTitle = $currentCategory->getName();
+}
+
 ?>
 
 <div class="row justify-content-center">
@@ -21,7 +40,7 @@ $products = Product::getAll();
     <!-- Aside left -->
     <?php require './inc/layout/aside-left.php'; ?>
     <div class="col-md-7 border-right">
-        <h2>Productos más recientes</h2>
+        <h2><?= $subTitle ?></h2>
         <div class="row row-cols-2 row-cols-sm-3 row-cols-md-3 justify-content-around">
             <?php foreach ($products as $product) : ?>
                 <div class="card product-card mx-1 my-1">

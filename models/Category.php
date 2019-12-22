@@ -60,6 +60,18 @@ class Category
         }
     }
 
+    public static function getAllWithoutParentNotMain()
+    {
+        try {
+            $stmt = self::db()->prepare("SELECT * FROM categories WHERE category_id = 0");
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_CLASS, "Category");
+            return $result;
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        }
+    }
+
     public function save($updating = false)
     {
         try {
@@ -181,5 +193,20 @@ class Category
         }
 
         return $response;
+    }
+
+    public function hasSubcategories()
+    {
+        try {
+            $stmt = self::db()->prepare("SELECT * FROM categories WHERE category_id = :category_id");
+            $stmt->execute([':category_id' => $this->id]);
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } 
+            return false;
+            
+        } catch (Exception $e) {
+            return false;
+        }
     }
 }

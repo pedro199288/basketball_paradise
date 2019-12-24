@@ -7,8 +7,6 @@ $pageTitle = "Ver Productos";
 $pageDescriprion = null;
 
 require '../inc/layout/header.php';
-require '../models/Category.php';
-require '../models/Product.php';
 
 // check permissions
 checkPermisos($currentUser, ['admin', 'moderador']);

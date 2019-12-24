@@ -4,6 +4,8 @@ require $ROOT_PATH . 'config/config.php';
 require $ROOT_PATH . 'config/db.php';
 require $ROOT_PATH . 'utils/utils.php';
 require $ROOT_PATH . 'models/User.php';
+require $ROOT_PATH . 'models/Category.php';
+require $ROOT_PATH . 'models/Product.php';
 require $ROOT_PATH . 'utils/sessions.php';
 
 // close session

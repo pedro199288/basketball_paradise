@@ -7,7 +7,6 @@ $pageTitle = "Ver Categorías";
 $pageDescriprion = null;
 
 require '../inc/layout/header.php';
-require '../models/Category.php';
 
 // check permissions
 checkPermisos($currentUser, ['admin', 'moderador']);

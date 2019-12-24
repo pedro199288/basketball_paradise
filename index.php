@@ -7,8 +7,6 @@ $pageTitle = "Basketball Paradise";
 $pageDescriprion = null;
 
 require './inc/layout/header.php';
-require './models/Category.php';
-require './models/Product.php';
 
 // Get all products to show in table
 $products = Product::getAll();

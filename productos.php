@@ -7,8 +7,6 @@ $pageTitle = "Productos - Basketball Paradise";
 $pageDescriprion = "Explora todos nuestros productos de baloncesto. Zapatillas, camisetas NBA, pantalones...";
 
 require './inc/layout/header.php';
-require './models/Category.php';
-require './models/Product.php';
 
 if (isset($_GET['c'])) {
     $currentCategory = Category::getById($_GET['c']);

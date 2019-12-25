@@ -12,7 +12,7 @@ if (isset($_GET['c'])) {
     $currentCategory = Category::getById($_GET['c']);
     $products = [];
     if ($currentCategory instanceof Category) {
-        if ($currentCategory->getCategoryId() === null) {
+        if ($currentCategory->hasSubcategories()) {
             // get its subcategories
             foreach ($currentCategory->getSubcategories() as $subCategories) {
                 $products = array_merge($products, Product::getByCategoryId($subCategories->getId()));
@@ -29,6 +29,17 @@ if (isset($_GET['c'])) {
     $subTitle = $currentCategory->getName();
 }
 
+
+$pag = (isset($_GET['pag']) && is_numeric($_GET['pag'])) ? $_GET['pag'] : 1;
+$totalProducts = count($products);
+$rowRegistries = 6;
+$totalPags = (int) ($totalProducts/$rowRegistries) +1;
+$displacement = ($pag * $rowRegistries) - $rowRegistries;
+$products = array_filter($products, function($p) use ($displacement, $rowRegistries, $pag) {
+    return ($p >= $displacement && $p <$rowRegistries * $pag);
+}, ARRAY_FILTER_USE_KEY);
+
+ 
 ?>
 
 <div class="row justify-content-center">
@@ -53,6 +64,7 @@ if (isset($_GET['c'])) {
                 </div>
             <?php endforeach; ?>
         </div>
+        <?php require './inc/pagination.php'; ?>
     </div>
     <!-- Aside right -->
     <?php require './inc/layout/aside-right.php'; ?>

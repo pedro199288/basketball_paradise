@@ -13,6 +13,15 @@ checkPermisos($currentUser, ['admin', 'moderador']);
 
 // Get all categories to show in table
 $categories = Category::getAll();
+
+$pag = (isset($_GET['pag']) && is_numeric($_GET['pag'])) ? $_GET['pag'] : 1;
+$totalCategories = count($categories);
+$rowRegistries = 6;
+$totalPags = (int) ($totalCategories/$rowRegistries) +1;
+$displacement = ($pag * $rowRegistries) - $rowRegistries;
+$categories = array_filter($categories, function($p) use ($displacement, $rowRegistries, $pag) {
+    return ($p >= $displacement && $p < $rowRegistries * $pag);
+}, ARRAY_FILTER_USE_KEY);
 ?>
 
 <div class="row justify-content-center">
@@ -59,6 +68,8 @@ $categories = Category::getAll();
                 </tbody>
             </table>
         </div>
+
+        <?php require '../inc/pagination.php'; ?>
     </div>
     <!-- Aside right -->
     <?php require '../inc/layout/aside-right.php'; ?>

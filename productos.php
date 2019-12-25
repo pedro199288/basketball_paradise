@@ -59,7 +59,7 @@ $products = array_filter($products, function($p) use ($displacement, $rowRegistr
                             <h5 class="card-title"><?= $product->getName() ?></h5>
                             <p class="card-text text-center font-weight-bold card-subtitle text-secondary my-1 h4"><?= $product->getPrice() . ' €' ?></p>
                         </div>
-                        <a href="#" class="btn btn-primary btn-block mt-2 align-self-end">Comprar</a>
+                        <a href="<?= RUTA_HOME . 'modificar-carrito.php?id='.$product->getId() ?>" class="btn btn-primary btn-block mt-2 align-self-end">Comprar</a>
                     </div>
                 </div>
             <?php endforeach; ?>

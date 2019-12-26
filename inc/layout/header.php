@@ -18,7 +18,11 @@ if (isset($_GET['logout'])) {
 
 // current user to use in the whole application
 $currentUser = $_SESSION['user'] ?? null;
-$currentCart = json_decode($_COOKIE['cart'], true) ?? null;
+if(isset($_COOKIE['cart'])) {
+    $currentCart = json_decode($_COOKIE['cart'], true);
+} else {
+    $currentCart = null;
+}
 
 // TODO: get the links from a function
 $links = [

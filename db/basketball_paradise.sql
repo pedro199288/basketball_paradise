@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.3
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 22-12-2019 a las 20:15:59
--- Versión del servidor: 10.1.36-MariaDB
--- Versión de PHP: 7.2.11
+-- Servidor: localhost
+-- Tiempo de generación: 01-01-2020 a las 14:16:15
+-- Versión del servidor: 8.0.18
+-- Versión de PHP: 7.3.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -49,6 +49,34 @@ INSERT INTO `categories` (`id`, `name`, `category_id`) VALUES
 (10, 'zapatillas jordan', 2),
 (11, 'zapatillas Nike', 2),
 (12, 'Zapatillas Adidas', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `lineItems`
+--
+
+CREATE TABLE `lineItems` (
+  `order_id` int(11) NOT NULL,
+  `lineNumber` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL,
+  `user_dni` varchar(9) NOT NULL,
+  `status` varchar(50) NOT NULL,
+  `purchaseDate` datetime NOT NULL,
+  `shippingDate` datetime NOT NULL,
+  `deliveryDate` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -107,7 +135,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`dni`, `name`, `surname`, `email`, `password`, `rol`, `status`) VALUES
 ('123456789', NULL, NULL, 'd@d.com', '$2y$10$WKjvLaciJPrrYjMedcBxHOdrWx.L1h0qNzAOpdh/XGBXruMeMicfi', 'cliente', 'activo'),
 ('12345678a', 'admin', 'admin', 'admin@admin.com', '$2y$10$fg3.ZlKJuaF/EOdHal9dCu.UWVkEg.kepODosFDUujYfdrBsiR0FC', 'admin', 'activo'),
-('12345678c', NULL, NULL, 'cliente@cliente.com', '$2y$10$qvamGve2Ykc.cuxMmX2JzOdFLbYLgCgSMFLwvgW22uj0blEN23Ucq', 'cliente', 'activo');
+('12345678c', 'cliente', 'cliente', 'cliente@cliente.com', '$2y$10$qvamGve2Ykc.cuxMmX2JzOdFLbYLgCgSMFLwvgW22uj0blEN23Ucq', 'cliente', 'activo');
 
 --
 -- Índices para tablas volcadas
@@ -119,6 +147,20 @@ INSERT INTO `users` (`dni`, `name`, `surname`, `email`, `password`, `rol`, `stat
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`id`),
   ADD KEY `category_id` (`category_id`);
+
+--
+-- Indices de la tabla `lineItems`
+--
+ALTER TABLE `lineItems`
+  ADD KEY `prod_id` (`product_id`),
+  ADD KEY `order_id` (`order_id`);
+
+--
+-- Indices de la tabla `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_dni` (`user_dni`);
 
 --
 -- Indices de la tabla `products`
@@ -148,6 +190,23 @@ ALTER TABLE `categories`
 --
 ALTER TABLE `products`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `lineItems`
+--
+ALTER TABLE `lineItems`
+  ADD CONSTRAINT `order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `prod_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Filtros para la tabla `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `user_dni` FOREIGN KEY (`user_dni`) REFERENCES `users` (`dni`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

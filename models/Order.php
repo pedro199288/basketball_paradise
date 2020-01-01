@@ -2,6 +2,7 @@
 class Order {
     private $id;
     private $user_dni;
+    private $address;
     private $lines;
     private $status;
     private $purchaseDate;
@@ -19,6 +20,10 @@ class Order {
         $this->userDni = $userDni;
     }
 
+    public function setAddress($address) {
+        $this->address = $address;
+    }
+
     public function setLines($lines) {
         $this->lines = $lines;
     }
@@ -28,15 +33,15 @@ class Order {
     }
 
     public function setPurchaseDate($purchaseDate) {
-        $this->$purchaseDate = $purchaseDate;
+        $this->purchaseDate = $purchaseDate;
     }
 
     public function setShippingDate($shippingDate) {
-        $this->$shippingDate = $shippingDate;
+        $this->shippingDate = $shippingDate;
     }
 
     public function setDeliveryDate($deliveryDate) {
-        $this->$deliveryDate = $deliveryDate;
+        $this->deliveryDate = $deliveryDate;
     }
 
     public function getId() {
@@ -45,6 +50,10 @@ class Order {
 
     public function getUserDni() {
         return $this->userDni;
+    }
+
+    public function getAddress() {
+        return $this->address;
     }
 
     public function getLines() {
@@ -56,15 +65,15 @@ class Order {
     }
 
     public function getPurchaseDate() {
-        return $this->$purchaseDate;
+        return $this->purchaseDate;
     }
 
     public function getShippingDate() {
-        return $this->$shippingDate;
+        return $this->shippingDate;
     }
 
     public function getDeliveryDate() {
-        return $this->$deliveryDate;
+        return $this->deliveryDate;
     }
 
     public function save($updating = false){}

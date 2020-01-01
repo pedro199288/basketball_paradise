@@ -7,20 +7,28 @@ $pageTitle = "Gracias por tu compra";
 $pageDescriprion = null;
 
 require './inc/layout/header.php';
+require './models/Order.php';
 
-// save the cart in a new order
-$currentOrder = new Order();
-foreach(json_decode($currentCart, true) as $line) {
-    $currentOrder->addLine($line);
+
+//TODO: En esta página dar a elegir la dirección de envío o la posibilidad de añadir una nueva / también métodos de pago (falso)
+
+if(isset($_GET['finalizar'])){
+    // save the cart in a new order if 
+    $currentOrder = new Order();
+    foreach ($currentCart as $line) {
+        $currentOrder->addLine($line);
+    }
+    $currentOrder->setUserDni($currentUser->getDni());
+    $currentOrder->setStatus('realizado');
+    $currentOrder->save();
+    
+    die();
+    // delete the cookie and the cart variable
+    $currentCart = null;
+    setcookie("cart", 0, time() - 3600);
+
+    // TODO: Redirect to thank you page or to mis-pedidos
 }
-$currentOrder->setDni($currentUser->getDni());
-$currentOrder->setStatus('realizado');
-$currentOrder->save();
-
-die();
-// delete the cookie and the cart variable
-$currentCart = null;
-setcookie("cart", 0, time()-3600 );
 
 ?>
 

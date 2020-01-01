@@ -11,6 +11,14 @@ deleteAlerts();
                 </a>
             </div>
         </div>
+        <div class="row justify-content-center mb-5">
+            <nav class="nav">
+                <a href="<?= RUTA_HOME ?>condiciones-envio.php" class="nav-item mx-1">Condiciones de envío</a>
+                <a href="<?= RUTA_HOME ?>condiciones-generales.php" class="nav-item mx-1">Condiciones generales</a>
+                <a href="<?= RUTA_HOME ?>politica-devolucion.php" class="nav-item mx-1">Política de devolucion</a>
+                <a href="<?= RUTA_HOME ?>politica-cookies.php" class="nav-item mx-1">Política de cookies</a>
+            </nav>
+        </div>
         <div class="row justify-content-center">
             <p class="text-light">
                 Pedro Montegudo Jiménez &copy;

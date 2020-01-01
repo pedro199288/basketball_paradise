@@ -31,12 +31,16 @@ $links = [
         'link' => RUTA_HOME . 'index.php'
     ],
     [
+        'text' => 'Ofertas',
+        'link' => RUTA_HOME . 'ofertas.php'
+    ],
+    [
         'text' => 'Quienes Somos',
         'link' => RUTA_HOME . 'quienes-somos.php'
     ],
     [
         'text' => 'Contacto',
-        'link' => RUTA_HOME . 'products?category=tank_top'
+        'link' => RUTA_HOME . 'contacto.php'
     ]
 ];
 
@@ -51,7 +55,6 @@ $links = [
     <title><?= $pageTitle ?? "Basketball's Paradise" ?></title>
     <meta name="description" content="<?= $pageDescription ?? "La mejor tienda online de baloncesto" ?>">
     <!-- link for bootstrap -->
-    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="<?= RUTA_HOME ?>assets/css/bootstrap.css">
     <link rel="stylesheet" href="<?= RUTA_HOME ?>assets/css/main.css">
 </head>

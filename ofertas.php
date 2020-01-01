@@ -3,8 +3,8 @@
 /** 
  * Change variables for title and description
  */
-$pageTitle = "Basketball Paradise";
-$pageDescriprion = null;
+$pageTitle = "Ofertas - Basketball Paradise";
+$pageDescriprion = "Ofertas en productos de Baloncesto";
 
 require './inc/layout/header.php';
 
@@ -34,13 +34,10 @@ $products = array_filter($products, function ($p) use ($displacement, $rowRegist
         <div class="row row-cols-2 row-cols-sm-3 row-cols-md-3 justify-content-around">
             <?php foreach ($products as $product) : ?>
                 <div class="card product-card mx-1 my-1">
-                    <div class="product-img" style="background-image: url('<?= RUTA_HOME . 'assets/img/products/' . (!empty($product->getImage()) ? $product->getImage() : 'default.svg') ?>')"></div>
+                    <img src="<?= RUTA_HOME . 'assets/img/products/' . (!empty($product->getImage()) ? $product->getImage() : 'default.svg') ?>" class="card-img-top" alt="<?= $product->getName() ?>">
                     <div class="card-body d-flex text-center flex-wrap">
                         <div class="w-100 align-self-start">
                             <h5 class="card-title"><?= $product->getName() ?></h5>
-                            <p>
-                                <?= $product->getDescription() ?>
-                            </p>
                             <p class="card-text text-center font-weight-bold card-subtitle text-secondary my-1 h4"><?= $product->getPrice() . ' €' ?></p>
                         </div>
                         <a href="<?= RUTA_HOME . 'modificar-carrito.php?id=' . $product->getId() ?>" class="btn btn-primary btn-block mt-2 align-self-end">Comprar</a>

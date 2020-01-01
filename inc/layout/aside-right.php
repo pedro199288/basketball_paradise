@@ -42,7 +42,7 @@
     <?php endif; ?>
 
     <?php if (!$currentUser) : ?>
-        <form action="controllers/user.php" method="POST">
+        <form action="controllers/user.php" method="POST" id="user-login">
             <div class="form-group">
                 <label for="loginEmail">Tu email</label>
                 <input type="email" class="form-control  <?= !empty($_SESSION['danger_alerts']['loginEmail']) ? 'is-invalid' : '' ?>" id="loginEmail" name="loginEmail" value="<?= $_SESSION['filled']['loginEmail'] ?? '' ?>">

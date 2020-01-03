@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.2
+-- version 4.8.3
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost
--- Tiempo de generación: 01-01-2020 a las 14:16:15
--- Versión del servidor: 8.0.18
--- Versión de PHP: 7.3.9
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 03-01-2020 a las 22:36:29
+-- Versión del servidor: 10.1.36-MariaDB
+-- Versión de PHP: 7.2.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -21,6 +21,35 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `basketball_paradise`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `addresses`
+--
+
+CREATE TABLE `addresses` (
+  `id` int(11) NOT NULL,
+  `user_dni` varchar(9) NOT NULL,
+  `address_number` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `surname` varchar(255) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `postal_code` varchar(10) NOT NULL,
+  `location` varchar(255) NOT NULL,
+  `province` varchar(255) NOT NULL,
+  `deleted` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `addresses`
+--
+
+INSERT INTO `addresses` (`id`, `user_dni`, `address_number`, `name`, `surname`, `address`, `postal_code`, `location`, `province`, `deleted`) VALUES
+(1, '12345678c', 1, 'Pedroa', 'JIméneze', '54a', 'dfa', 'dfaa', 'afa', 1),
+(2, '12345678c', 2, 'Pedro', 'JIménez', '54', 'df', 'dfa', 'af', 0),
+(3, '12345678c', 3, 'Pedro', 'JIménez', 'Dirección de prueba más larga para ver si se llena la tabla', 'df', 'dfa', 'af', 0),
+(4, '12345678c', 4, 'Pedro', 'Monteagudo', 'una dirección', '32423', 'localidad', 'provincia', 0);
 
 -- --------------------------------------------------------
 
@@ -53,12 +82,12 @@ INSERT INTO `categories` (`id`, `name`, `category_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `lineItems`
+-- Estructura de tabla para la tabla `line_items`
 --
 
-CREATE TABLE `lineItems` (
+CREATE TABLE `line_items` (
   `order_id` int(11) NOT NULL,
-  `lineNumber` int(11) NOT NULL,
+  `line_number` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -72,10 +101,11 @@ CREATE TABLE `lineItems` (
 CREATE TABLE `orders` (
   `id` int(11) NOT NULL,
   `user_dni` varchar(9) NOT NULL,
+  `address` int(11) NOT NULL,
   `status` varchar(50) NOT NULL,
-  `purchaseDate` datetime NOT NULL,
-  `shippingDate` datetime NOT NULL,
-  `deliveryDate` datetime NOT NULL
+  `purchase_date` datetime NOT NULL,
+  `shipping_date` datetime NOT NULL,
+  `delivery_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -142,6 +172,13 @@ INSERT INTO `users` (`dni`, `name`, `surname`, `email`, `password`, `rol`, `stat
 --
 
 --
+-- Indices de la tabla `addresses`
+--
+ALTER TABLE `addresses`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_address` (`user_dni`);
+
+--
 -- Indices de la tabla `categories`
 --
 ALTER TABLE `categories`
@@ -149,9 +186,9 @@ ALTER TABLE `categories`
   ADD KEY `category_id` (`category_id`);
 
 --
--- Indices de la tabla `lineItems`
+-- Indices de la tabla `line_items`
 --
-ALTER TABLE `lineItems`
+ALTER TABLE `line_items`
   ADD KEY `prod_id` (`product_id`),
   ADD KEY `order_id` (`order_id`);
 
@@ -180,6 +217,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `addresses`
+--
+ALTER TABLE `addresses`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT de la tabla `categories`
 --
 ALTER TABLE `categories`
@@ -196,17 +239,23 @@ ALTER TABLE `products`
 --
 
 --
--- Filtros para la tabla `lineItems`
+-- Filtros para la tabla `addresses`
 --
-ALTER TABLE `lineItems`
-  ADD CONSTRAINT `order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `prod_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `addresses`
+  ADD CONSTRAINT `user_address` FOREIGN KEY (`user_dni`) REFERENCES `users` (`dni`);
+
+--
+-- Filtros para la tabla `line_items`
+--
+ALTER TABLE `line_items`
+  ADD CONSTRAINT `order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
+  ADD CONSTRAINT `prod_id` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
 
 --
 -- Filtros para la tabla `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `user_dni` FOREIGN KEY (`user_dni`) REFERENCES `users` (`dni`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD CONSTRAINT `user_dni` FOREIGN KEY (`user_dni`) REFERENCES `users` (`dni`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

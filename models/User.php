@@ -134,6 +134,7 @@ class User
     }
 
     public static function delete($dni)
+    // TODO: añadir campo 'deleted' a la bd, también para productos y categorías y cambiar el método
     {
         try {
             $stmt = self::db()->prepare("UPDATE users SET deleted = 1 WHERE dni = :dni");

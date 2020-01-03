@@ -11,7 +11,7 @@ $_SESSION['success_alerts'] = [];
 // current user
 $currentUser = $_SESSION['user'];
 
-$action = $_POST['action'] ?? null;
+$action = $_POST['action'] ?? $_GET['action'] ?? null;
 switch ($action) {
     case 'save':
         // user registration
@@ -85,7 +85,7 @@ switch ($action) {
         if (count($_SESSION['danger_alerts']) === 0) {
             // instanciate user
             $newUser = new User();
-            if($updating){
+            if ($updating) {
                 $newUser = $existeDni;
             }
             $newUser->setDni($dni);
@@ -157,7 +157,103 @@ switch ($action) {
         break;
 
 
+    case 'save_address':
+        // address saving
+        //check if updating
+        $updating = $_POST['updating'] ? true : false;
+
+        // validate fields
+        if (!empty($_POST['address'])) {
+            $address = $_POST['address'];
+        } else {
+            $_SESSION['danger_alerts']['address'] = 'Rellena el campo direccion';
+            $address = null;
+        }
+
+        if (!empty($_POST['postal_code'])) {
+            $postal_code = $_POST['postal_code'];
+        } else {
+            $_SESSION['danger_alerts']['postal_code'] = 'Rellena el campo de código postal';
+            $postal_code = null;
+        }
+
+        if (!empty($_POST['location'])) {
+            $location = $_POST['location'];
+        } else {
+            $_SESSION['danger_alerts']['location'] = 'Rellena el campo de localidad';
+            $location = null;
+        }
+
+        if (!empty($_POST['province'])) {
+            $province = $_POST['province'];
+        } else {
+            $_SESSION['danger_alerts']['province'] = 'Rellena el campo de provincia';
+            $province = null;
+        }
+
+
+        $name = $_POST['name'] ?? null;
+        $surname = $_POST['surname'] ?? null;
+
+        // store filled fields
+        $_SESSION['filled'] = [
+            'name' => $name,
+            'surname' => $surname,
+            'address' => $address,
+            'postal_code' => $postal_code,
+            'location' => $location,
+            'province' => $province,
+        ];
+
+        if (count($_SESSION['danger_alerts']) === 0) {
+            // create array with the full address
+            $addressArray = [];
+
+            if ($updating) {
+                $addressArray['id'] = $_POST['id'];
+            }
+            $addressArray['name'] = $name;
+            $addressArray['surname'] = $surname;
+            $addressArray['address'] = $address;
+            $addressArray['postal_code'] = $postal_code;
+            $addressArray['location'] = $location;
+            $addressArray['province'] = $province;
+
+            //  save address
+            $response = $currentUser->saveAddress($updating, $addressArray);
+
+            if ($response['type'] == 'success') {
+                $_SESSION['success_alerts'][] = $response['message'];
+                $_SESSION['filled'] = null;
+            } else {
+                $_SESSION['danger_alerts'][] = $response['message'];
+            }
+        }
+
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        die();
+        break;
+
+    case 'delete_address':
+        $addressArray['id'] = $_GET['id'];
+
+        echo $addressArray;
+
+        $response = User::deleteAddress($addressArray);
+
+        if ($response['type'] == 'success') {
+            $_SESSION['success_alerts'][] = $response['message'];
+            $_SESSION['filled'] = null;
+        } else {
+            $_SESSION['danger_alerts'][] = $response['message'];
+        }
+
+        header("Location: " . RUTA_HOME . 'editar-usuario.php');
+        die();
+        break;
+
+
     default:
-        # code...
+        echo 'nada';
         break;
 }

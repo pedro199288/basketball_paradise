@@ -11,6 +11,7 @@ require './inc/layout/header.php';
 
 // check permissions
 checkPermisos($currentUser, ['cliente', 'admin', 'moderador']);
+$addresses = $currentUser->getAddresses() ?? null;
 
 ?>
 
@@ -79,7 +80,47 @@ checkPermisos($currentUser, ['cliente', 'admin', 'moderador']);
                     <h2>Tus direcciones guardadas</h2>
                 </div>
                 <div class="row">
-                    TODO:
+                    <div class="col-12 d-flex justify-content-between mb-3">
+                        <h4>Direcciones</h4>
+                        <a href="<?= RUTA_HOME ?>editar-direccion.php" class="btn btn-primary">Añadir Dirección</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <?php if ($addresses) : ?>
+                        <table class="table table-striped table-hover table-responsive col-12 w-100">
+                            <thead>
+                                <tr>
+                                    <th scope="col">number</th>
+                                    <th scope="col">nombre</th>
+                                    <th scope="col">apellidos</th>
+                                    <th scope="col">dirección</th>
+                                    <th scope="col">acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($addresses as $address) : ?>
+                                    <tr>
+                                        <th scope="row"><?= $address['address_number'] ?></th>
+                                        <td><?= $address['name'] ?></td>
+                                        <td><?= $address['surname'] ?></td>
+                                        <td>
+                                            <p><?= $address['address'] ?></p>
+                                            <p><?= $address['postal_code'] ?></p>
+                                            <p><?= $address['location'] ?></p>
+                                            <p><?= $address['province'] ?></p>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-secondary" href="<?= RUTA_HOME ?>editar-direccion.php?id=<?= $address['id'] ?>">Editar</a>
+                                            <a class="btn btn-danger" href="<?= RUTA_HOME ?>editar-direccion.php?action=delete&id=<?= $address['id'] ?>">Borrar</a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else : ?>
+                        <p>No hay direcciones guardadas</p>
+                    <?php endif; ?>
+
                 </div>
             </section>
         </main>

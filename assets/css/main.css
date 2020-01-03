@@ -40,9 +40,9 @@ a.btn {
 .btn-primary:hover,
 .btn-primary:active,
 .btn-primary:focus {
-  background-color: rgb(192, 45, 0)!important;
-  border: rgb(192, 45, 0)!important;
-  text-decoration: none!important;
+  background-color: rgb(192, 45, 0) !important;
+  border: rgb(192, 45, 0) !important;
+  text-decoration: none !important;
 }
 
 a {
@@ -52,15 +52,20 @@ a {
 
 a:hover {
   color: #000;
-  text-decoration: underline!important;
+  text-decoration: underline !important;
 }
 
 nav .nav-link {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 nav .nav-link:hover {
-    text-decoration: none!important;
+  text-decoration: none !important;
+}
+
+table td,
+table th {
+  vertical-align: middle!important;
 }
 
 /* header */

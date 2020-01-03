@@ -9,10 +9,15 @@ $pageDescriprion = null;
 require './inc/layout/header.php';
 require './models/Order.php';
 
+if (!$currentUser) {
+    $_SESSION['danger_alerts'][] = 'Debes tener sesión inicada para finalizar el pedido';
+    header("Location: " . RUTA_HOME . "index.php");
+}
+
 
 //TODO: En esta página dar a elegir la dirección de envío o la posibilidad de añadir una nueva / también métodos de pago (falso)
 
-if(isset($_GET['finalizar'])){
+if (isset($_GET['finalizar'])) {
     // save the cart in a new order if 
     $currentOrder = new Order();
     foreach ($currentCart as $line) {
@@ -21,7 +26,7 @@ if(isset($_GET['finalizar'])){
     $currentOrder->setUserDni($currentUser->getDni());
     $currentOrder->setStatus('realizado');
     $currentOrder->save();
-    
+
     die();
     // delete the cookie and the cart variable
     $currentCart = null;
@@ -39,9 +44,15 @@ if(isset($_GET['finalizar'])){
     <!-- Aside left -->
     <?php require './inc/layout/aside-left.php'; ?>
     <div class="col-md-7 border-right">
-        <h2>Gracias por tu compra!</h2>
         <div class="row">
-            <p class="h5">Tu pedido se ha guardado y será envíado en el menor tiempo posible</p>
+            <?php if (!$currentUser->getAddresses()) : ?>
+                <h2>Selecciona una de tus direcciones o añade una nueva.</h2>
+                <p>
+                    Para finalizar compra <a href="<?= $_SERVER['PHP_SELF'] . '#user-login' ?>">inicia sesión</a> o <a href="<?= RUTA_HOME . 'registro.php' ?>">regístrate</a>
+                </p>
+            <?php else : ?>
+                <a class="btn btn-primary" href="finalizar-pedido.php">Finalizar pedido</a>
+            <?php endif; ?>
         </div>
     </div>
     <!-- Aside right -->

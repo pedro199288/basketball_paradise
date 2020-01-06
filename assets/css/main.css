@@ -14,6 +14,11 @@ footer {
   position: absolute !important;
   bottom: 0;
 }
+
+footer a:hover {
+  color: #fff;
+}
+
 /* general */
 .bg-page {
   background: linear-gradient(135deg, rgb(48, 34, 58), rgb(241, 56, 0) 75%);

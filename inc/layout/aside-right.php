@@ -60,7 +60,7 @@
         <p><b>Bienvenido</b>, <?= $currentUser->getName() ?? $currentUser->getEmail() ?></p>
         <div class="mb-4">
             <a class="nav-link" href="<?=RUTA_HOME?>editar-usuario.php">Editar perfil</a>
-            <a class="nav-link" href="<?=RUTA_HOME?>pedidos.php">Mis Pedidos</a>
+            <a class="nav-link" href="<?=RUTA_HOME?>mis-pedidos.php">Mis Pedidos</a>
             <a class="btn btn-secondary d-block mt-3 mx-auto" href="<?= $_SERVER['PHP_SELF'] ?>?logout">Cerrar sesión</a>
         </div>
 

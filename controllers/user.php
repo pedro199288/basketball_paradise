@@ -17,7 +17,7 @@ switch ($action) {
         // user registration
 
         //check if updating
-        $updating = $_POST['updating'] ? true : false;
+        $updating = isset($_POST['updating']) ? true : false;
 
         // validate fields: dni, email and password
         if (!empty($_POST['dni'])) {
@@ -29,7 +29,8 @@ switch ($action) {
                 // check if dni exists
                 $existeDni = User::getByDni($dni);
 
-                if ($existeDni instanceof User && $existeDni->getDni() == $currentUser->getDni()) $updatingCurrentUser = true;
+                if ($existeDni instanceof User && $currentUser && $existeDni->getDni() == $currentUser->getDni()) 
+                    $updatingCurrentUser = true;
 
                 if (($existeDni instanceof User && !$updating) || ($updating && $existeDni instanceof User && $existeDni->getDni() != $currentUser->getDni())) {
                     $_SESSION['danger_alerts']['dni'] = 'El DNI ya existe';
@@ -44,7 +45,7 @@ switch ($action) {
             $email = $_POST['email'];
             // check if email exists
             $existeEmail = User::getByEmail($email);
-            if ($existeEmail instanceof User && $existeEmail->getEmail() == $currentUser->getEmail()) $updatingCurrentUser = true;
+            if ($existeEmail instanceof User && $currentUser && $existeEmail->getEmail() == $currentUser->getEmail()) $updatingCurrentUser = true;
 
             if (($existeEmail instanceof User  && !$updating) || ($updating && $existeEmail instanceof User && $existeEmail->getEmail() != $currentUser->getEmail())) {
                 $_SESSION['danger_alerts']['email'] = 'El email ya existe';
@@ -137,8 +138,8 @@ switch ($action) {
         $_SESSION['filled'] = ['loginEmail' => $email];
 
         $loginUser = User::getByEmail($email);
-        if ($loginUser instanceof User) {
-            // user exists,check password
+        if ($loginUser instanceof User && $loginUser->getStatus() != 'borrado') {
+            // user exists and is not deleted,check password
             $hashed_password = $loginUser->getPassword();
             if (password_verify($password, $hashed_password)) {
                 // correct password, store user in SESSION
@@ -149,7 +150,28 @@ switch ($action) {
                 $_SESSION['danger_alerts']['loginPassword'] = 'Password incorrecto';
             }
         } else {
-            $_SESSION['danger_alerts']['loginEmail'] = 'No existe ningún usuario con este email';
+            $_SESSION['danger_alerts']['loginEmail'] = 'No existe ningún usuario con este email o se ha dado de baja';
+        }
+
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        die();
+        break;
+
+    
+    case 'delete':
+        //user login
+        $dni = $_GET['dni'] ?? null;
+
+        if($dni) {
+            $response = User::delete($dni);
+            if($response['type'] == 'success') {
+                $_SESSION['success_alerts'][] =  $response['message'];
+                $_SESSION['user'] = null;
+            }else {
+                $_SESSION['danger_alerts'][] = $response['message'];
+            }
+        } else {
+            $_SESSION['danger_alerts'][] = $response['message'];
         }
 
         header("Location: " . $_SERVER['HTTP_REFERER']);

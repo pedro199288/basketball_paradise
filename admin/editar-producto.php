@@ -84,11 +84,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete') : ?>
                     <option value=null>Sin Categoría</option>
                     <?php foreach ($mainCategories as $mainCategory) : ?>
                         <optgroup label="<?= $mainCategory->getName() ?>">
-                            <?php foreach ($mainCategory->getSubcategories() as $secondaryCategory) : ?>
-                                <option <?= in_array($secondaryCategory->getId(), ($product ? $product->getCategories() : [])) ? 'selected' : '' ?> value="<?= $secondaryCategory->getId() ?>">
-                                    <?= $secondaryCategory->getName() ?>
-                                </option>
-                            <?php endforeach; ?>
+                            <?php if($mainCategory->hasSubcategories()): ?>
+                                <?php foreach ($mainCategory->getSubcategories() as $secondaryCategory) : ?>
+                                    <option <?= in_array($secondaryCategory->getId(), ($product ? $product->getCategories() : [])) ? 'selected' : '' ?> value="<?= $secondaryCategory->getId() ?>">
+                                        <?= $secondaryCategory->getName() ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </optgroup>
                     <?php endforeach; ?>
                     <optgroup label="Otras Categorías">

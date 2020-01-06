@@ -59,8 +59,6 @@ switch ($action) {
     case 'delete':
         // get the id
         $id = (int) $_GET['id'] ?? null;
-
-        // TODO: hacer la función para Product, ver como crear el json de categories
         $response = Product::setToNullByCategoryId($id);
         if ($response['type'] == 'success') {
             $_SESSION['success_alerts'][] = $response['message'];

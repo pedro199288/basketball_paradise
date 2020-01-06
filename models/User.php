@@ -134,16 +134,15 @@ class User
     }
 
     public static function delete($dni)
-    // TODO: añadir campo 'deleted' a la bd, también para productos y categorías y cambiar el método
     {
         try {
-            $stmt = self::db()->prepare("UPDATE users SET deleted = 1 WHERE dni = :dni");
+            $stmt = self::db()->prepare("UPDATE users SET status = 'borrado' WHERE dni = :dni");
             $stmt->execute([':dni' => $dni]);
 
             if ($stmt->rowCount() > 0) {
-                $response = ['type' => 'success', 'message' => 'Se ha borrado correctamente'];
+                $response = ['type' => 'success', 'message' => 'Se ha dado de baja correctamente'];
             } else {
-                $response = ['type' => 'error', 'message' => 'Ha surgido un error al borrar'];
+                $response = ['type' => 'error', 'message' => 'Ha surgido un error al dar de baja'];
             }
         } catch (Exception $e) {
             $response =  ['type' => 'error', 'message' => 'Error: ' . $e->getMessage()];
@@ -206,6 +205,23 @@ class User
         }
     }
 
+    public function getAddressById($id)
+    {
+        try {
+            $stmt = self::db()->prepare("SELECT * FROM addresses WHERE id = :id");
+            $stmt->execute([':id' => $id]);
+            if ($stmt->rowCount() > 0) {
+                $address = $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
+                return $address;
+            } else {
+                return null;
+            }
+        } catch (Exception $e) {
+            $response =  ['type' => 'error', 'message' => 'Ha surgido un error: ' . $e->getMessage()];
+            return null;
+        }
+    }
+
 
 
     public function saveAddress($updating = false, array $address)
@@ -215,9 +231,7 @@ class User
                 $stmt = self::db()->prepare("UPDATE addresses SET name = :name, surname = :surname, address = :address, postal_code = :postal_code, location = :location, province = :province WHERE id = :id");
             } else {
                 $query = self::db()->query("SELECT MAX(address_number) as maxNumber FROM addresses WHERE user_dni = '{$this->dni}' ");
-                $maxNumber = $query->fetch()['maxNumber'] ?? 0; // TODO: REVISAR ESTO
-                // var_dump( $maxNumber);
-                // die();
+                $maxNumber = $query->fetch()['maxNumber'] ?? 0;
                 $stmt = self::db()->prepare("INSERT INTO addresses VALUES (null, :user_dni, :address_number, :name, :surname, :address, :postal_code, :location, :province, false)");
             }
 
@@ -266,4 +280,40 @@ class User
         }
         return $response;
     }
+
+    public function getOrders()
+    {
+        try {
+            $stmt = self::db()->prepare("SELECT * FROM orders WHERE user_dni = :user_dni");
+            $stmt->execute([':user_dni' => $this->dni]);
+            if ($stmt->rowCount() > 0) {
+                $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $orders;
+            } else {
+                return null;
+            }
+        } catch (Exception $e) {
+            $_SESSION['danger_alerts'][] = 'Ha surgido un error: ' . $e->getMessage();
+            return null;
+        }
+    }
+
+    public function getOrderLines($orderId)
+    {
+        try {
+            $stmt = self::db()->prepare("SELECT * FROM line_items WHERE order_id = :order_id");
+            $stmt->execute([':order_id' => $orderId]);
+            if ($stmt->rowCount() > 0) {
+                $lines = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $lines;
+            } else {
+                return null;
+            }
+        } catch (Exception $e) {
+            $_SESSION['danger_alerts'][] = 'Ha surgido un error: ' . $e->getMessage();
+            return null;
+        }
+    }
+
+
 }

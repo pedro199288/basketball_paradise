@@ -92,10 +92,11 @@ class Product
     }
 
     /** get all products */
-    public static function getAll()
+    public static function getAll($includeDeleted = false)
     {
+        $sql = $includeDeleted ? '' : 'WHERE deleted = 0';
         try {
-            $stmt = self::db()->prepare("SELECT * FROM products ORDER BY modified DESC");
+            $stmt = self::db()->prepare("SELECT * FROM products $sql ORDER BY modified DESC");
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_CLASS, "Product");
             return $result;
@@ -151,23 +152,6 @@ class Product
             $products = $query->fetchAll();
             if (Category::getById($categoryId)->hasSubcategories()) {
                 // Si la categoría que se está borrando tiene categorías hijas, de momento no hacer nada en los productos, ya que estos se no se asocian a categorías genrales
-                // $filteredProducts = [];
-                // foreach (Category::getById($categoryId)->getSubcategories() as $subcategory) {
-                //     $subcategoryId = $subcategory->getId();                
-                //     $newProducts = array_filter($products, function ($p) use ($subcategoryId) {
-                //         return in_array($subcategoryId, $p->getCategories());
-                //     });
-                //     $newProducts = array_map(function ($p) use ($subcategoryId) {
-                //         $categories = $p->getCategories();
-                //         if (($key = array_search($subcategoryId, $categories)) !== false) {
-                //             unset($categories[$key]);
-                //             $p->setCategories(array_merge($categories));
-                //         }
-                //         return $p;
-                //     }, $newProducts);
-                //     $filteredProducts = array_merge($filteredProducts, $newProducts);
-                // }
-                // $filteredProducts = array_unique($filteredProducts, SORT_REGULAR);
             } else {
                 $filteredProducts = array_filter($products, function ($p) use ($categoryId) {
                     return in_array($categoryId, $p->getCategories());
@@ -196,13 +180,13 @@ class Product
     {
         // delete registry
         try {
-            $stmt = self::db()->prepare("DELETE FROM products WHERE id = :id");
+            $stmt = self::db()->prepare("UPDATE products SET deleted = 1 WHERE id = :id");
             $stmt->execute([':id' => $id]);
 
             if ($stmt->rowCount() > 0) {
-                $response = ['type' => 'success', 'message' => 'Se ha borrado correctamente'];
+                $response = ['type' => 'success', 'message' => 'Se ha dado de baja correctamente'];
             } else {
-                $response = ['type' => 'error', 'message' => 'Ha surgido un error al borrar'];
+                $response = ['type' => 'error', 'message' => 'Ha surgido un error al dar de baja'];
             }
         } catch (Exception $e) {
             $response =  ['type' => 'error', 'message' => 'Error: ' . $e->getMessage()];
@@ -229,11 +213,11 @@ class Product
         return $response;
     }
 
-    public static function getByCategoryId($categoryId)
+    public static function getByCategoryId($categoryId, $includeDeleted = false)
     {
+        $sql = $includeDeleted ? '' : 'WHERE deleted = 0';
         try {
-            // TODO: ver como ver $categoryId en el JSON de categories
-            $stmt = self::db()->prepare("SELECT * FROM products");
+            $stmt = self::db()->prepare("SELECT * FROM products $sql");
             $stmt->execute([':category_id' => $categoryId]);
             $stmt->setFetchMode(PDO::FETCH_CLASS, "Product");
             if ($stmt->rowCount() > 0) {

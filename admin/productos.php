@@ -12,8 +12,8 @@ require '../inc/layout/header.php';
 checkPermisos($currentUser, ['admin', 'moderador']);
 
 // Get all products to show in table
-$products = Product::getAll();
-
+$products = Product::getAll(true);
+// TODO: MOSTRAR LAS DELETED DE OTRA FORMA EN LA TABLA y dar opción de rehabilitar productos
 $pag = (isset($_GET['pag']) && is_numeric($_GET['pag'])) ? $_GET['pag'] : 1;
 $totalProducts = count($products);
 $rowRegistries = 6;

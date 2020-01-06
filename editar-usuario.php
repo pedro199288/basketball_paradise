@@ -123,6 +123,17 @@ $addresses = $currentUser->getAddresses() ?? null;
 
                 </div>
             </section>
+            <section class="mb-5">
+                <div class="row">
+                    <h2>Darme de baja</h2>
+                </div>
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-between mb-3">
+                        <a href="<?= RUTA_HOME ?>controllers/user.php?action=delete&dni=<?=$currentUser->getDni()?>" class="btn btn-primary">Darse de baja</a>
+                    </div>
+                </div>
+                
+            </section>
         </main>
     </div>
     <!-- Aside right -->

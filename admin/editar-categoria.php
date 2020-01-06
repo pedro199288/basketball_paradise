@@ -15,10 +15,10 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $categoryId = $_GET['id'];
     $pageTitle2 = 'Editar Categoría con id ' . $categoryId;
     // fetch categorytData
-    $category = Category::getById($categoryId);
+    $currentCategory = Category::getById($categoryId);
 } else {
     $pageTitle2 = 'Crear Categoría';
-    $category = null;
+    $currentCategory = null;
 }
 
 // Get the main categories to show them in select's options
@@ -61,7 +61,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete') : ?>
         <form action="<?= RUTA_HOME ?>controllers/category.php" method="POST">
             <div class="form-group">
                 <label for="name">Nombre</label>
-                <input type="text" class="form-control" id="name" name="name" value="<?= $category ? $category->getName() : '' ?>">
+                <input type="text" class="form-control" id="name" name="name" value="<?= $currentCategory ? $currentCategory->getName() : '' ?>">
             </div>
             <div class="form-group">
                 <label for="category">Categoría a la que pertenece</label>
@@ -69,13 +69,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete') : ?>
                 <select class="form-control" name="category" id="category">
                     <option value=null>Es Categoría Principal</option>
                     <?php foreach ($mainCategories as $mainCategory) : ?>
-                        <option <?= ($mainCategory->getId() === ($category ? $category->getCategoryId() : 'fad')) ? 'selected' : '' ?> value="<?= $mainCategory->getId() ?>"><?= $mainCategory->getName() ?></option>
+                        <option <?= ($mainCategory->getId() === ($currentCategory ? $currentCategory->getCategoryId() : 'fad')) ? 'selected' : '' ?> value="<?= $mainCategory->getId() ?>"><?= $mainCategory->getName() ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
 
-            <input type="hidden" name="id" value=<?= $category ?  $category->getId() : null ?>>
-            <input type="hidden" name="updating" value=<?= $category ? true : false ?>>
+            <input type="hidden" name="id" value=<?= $currentCategory ?  $currentCategory->getId() : null ?>>
+            <input type="hidden" name="updating" value=<?= $currentCategory ? true : false ?>>
             <button name="action" value="save" type="submit" class="btn btn-primary font-weight-bold">Guardar</button>
         </form>
     </div>

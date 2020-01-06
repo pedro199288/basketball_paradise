@@ -24,7 +24,6 @@ if(isset($_COOKIE['cart'])) {
     $currentCart = null;
 }
 
-// TODO: get the links from a function
 $links = [
     [
         'text' => 'Inicio',

@@ -46,12 +46,12 @@ class Category
     }
 
     /** get all categories */
-    public static function getAll($onlyMain = false)
+    public static function getAll($onlyMain = false, $includeDeleted = false)
     {
-        $sqlForMain = '';
-        if($onlyMain) $sqlForMain = '  WHERE category_id IS NULL';
+        $sqlForMain = $onlyMain ? 'WHERE category_id IS NULL' : '';
+        $deletedSql = $includeDeleted ? '' : ($onlyMain ? 'AND deleted = 0' : 'WHERE deleted = 0');
         try {
-            $stmt = self::db()->prepare("SELECT * FROM categories $sqlForMain");
+            $stmt = self::db()->prepare("SELECT * FROM categories $sqlForMain $deletedSql");
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_CLASS, "Category");
             return $result;
@@ -124,13 +124,13 @@ class Category
     {
         // delete registry
         try {
-            $stmt = self::db()->prepare("DELETE FROM categories WHERE id = :id");
+            $stmt = self::db()->prepare("UPDATE categories SET deleted = 1 WHERE id = :id");
             $stmt->execute([':id' => $id]);
 
             if ($stmt->rowCount() > 0) {
-                $response = ['type' => 'success', 'message' => 'Se ha borrado correctamente'];
+                $response = ['type' => 'success', 'message' => 'Se ha dado de baja la categoría'];
             } else {
-                $response = ['type' => 'error', 'message' => 'Ha surgido un error al borrar'];
+                $response = ['type' => 'error', 'message' => 'Ha surgido un error al dar de baja la categoría'];
             }
         } catch (Exception $e) {
             $response =  ['type' => 'error', 'message' => 'Error: ' . $e->getMessage()];

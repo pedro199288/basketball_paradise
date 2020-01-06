@@ -27,6 +27,6 @@ if(isset($_GET["id"])) {
         $currentCart[$productId] = 1;
     }
     $currentCart = json_encode($currentCart);
-    setcookie("cart", $currentCart, time()+3600 );
+    setcookie("cart", $currentCart, time()+3600*24*7 );
 }
 header("Location: ".$_SERVER['HTTP_REFERER'] ?? RUTA_HOME);

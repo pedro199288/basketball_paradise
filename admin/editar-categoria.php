@@ -73,6 +73,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete') : ?>
                     <?php endforeach; ?>
                 </select>
             </div>
+            <div class="form-group">
+                <label for="deleted">Is Deleted?</label>
+                <input type="checkbox" name="deleted" id="deleted" <?= $currentCategory->getDeleted() ? 'checked' : '' ?>>
+            </div>
 
             <input type="hidden" name="id" value=<?= $currentCategory ?  $currentCategory->getId() : null ?>>
             <input type="hidden" name="updating" value=<?= $currentCategory ? true : false ?>>

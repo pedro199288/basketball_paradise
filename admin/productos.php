@@ -13,7 +13,6 @@ checkPermisos($currentUser, ['admin', 'moderador']);
 
 // Get all products to show in table
 $products = Product::getAll(true);
-// TODO: MOSTRAR LAS DELETED DE OTRA FORMA EN LA TABLA y dar opción de rehabilitar productos
 $pag = (isset($_GET['pag']) && is_numeric($_GET['pag'])) ? $_GET['pag'] : 1;
 $totalProducts = count($products);
 $rowRegistries = 6;
@@ -52,7 +51,7 @@ $products = array_filter($products, function($p) use ($displacement, $rowRegistr
                 </thead>
                 <tbody>
                     <?php foreach ($products as $product) : ?>
-                        <tr>
+                        <tr class="<?= $product->getDeleted() ? 'opacity' : '' ?>">
                             <th scope="row"><?= $product->getId() ?></th>
                             <td><?= $product->getName() ?></td>
                             <td><?= $product->getPrice() ?></td>

@@ -10,6 +10,7 @@ class Product
     private $stock;
     private $categories;
     private $image;
+    private $deleted;
     private $modified;
 
     public function __construct()
@@ -51,6 +52,11 @@ class Product
         $this->image = $image;
     }
 
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+    }
+
     public function getId()
     {
         return $this->id;
@@ -86,6 +92,11 @@ class Product
         return $this->image;
     }
 
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
     private static function db()
     {
         return conn();
@@ -110,7 +121,7 @@ class Product
         try {
             if ($updating) {
                 // update registry
-                $stmt = self::db()->prepare("UPDATE products SET name = :name, description = :description, price = :price, stock = :stock, categories = :categories, image = :image, modified = NOW() WHERE id = :id");
+                $stmt = self::db()->prepare("UPDATE products SET name = :name, description = :description, price = :price, stock = :stock, categories = :categories, image = :image, deleted = :deleted,  modified = NOW() WHERE id = :id");
                 $stmt->execute([
                     ':id' => $this->id,
                     ':name' => $this->name,
@@ -119,6 +130,7 @@ class Product
                     ':stock' => $this->stock,
                     ':categories' => $this->categories,
                     ':image' => $this->image,
+                    ':deleted' => $this->deleted,
                 ]);
             } else {
                 // save new registry

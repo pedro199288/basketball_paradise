@@ -28,6 +28,7 @@ switch ($action) {
         $price = $_POST['price'] ?? null;
         $stock = $_POST['stock'] ?? null;
         $categories = !empty($_POST['categories']) ? $_POST['categories'] : null;
+        $deleted = !empty($_POST['deleted']) ? 1 : 0;
         
         if (empty($name)) $_SESSION['danger_alerts']['name'] = 'Rellena el campo nombre';
         if (empty($price)) $_SESSION['danger_alerts']['price'] = 'Rellena el campo precio';
@@ -58,6 +59,7 @@ switch ($action) {
             $newProduct->setPrice($price);
             $newProduct->setStock($stock);
             $newProduct->setCategories($categories);
+            $newProduct->setDeleted($deleted);
 
             // save Product
             $response = $newProduct->save($updating);

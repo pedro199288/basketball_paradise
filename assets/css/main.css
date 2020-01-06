@@ -73,6 +73,10 @@ table th {
   vertical-align: middle!important;
 }
 
+.opacity {
+  opacity: 0.5;
+}
+
 /* header */
 .logo-header {
   height: 4rem;

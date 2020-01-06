@@ -6,7 +6,8 @@ class Category
     private $id;
     private $name;
     private $category_id;
-
+    private $deleted;
+    
     public function __construct()
     { }
 
@@ -25,6 +26,11 @@ class Category
         $this->category_id = $category_id;
     }
 
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+    }
+
     public function getId()
     {
         return $this->id;
@@ -38,6 +44,11 @@ class Category
     public function getCategoryId()
     {
         return $this->category_id;
+    }
+
+    public function getDeleted()
+    {
+        return $this->deleted;
     }
 
     private static function db()
@@ -77,11 +88,13 @@ class Category
         try {
             if ($updating) {
                 // update registry
-                $stmt = self::db()->prepare("UPDATE categories SET name = :name, category_id = :category_id WHERE id = :id");
+                $stmt = self::db()->prepare("UPDATE categories SET name = :name, category_id = :category_id 
+                , deleted = :deleted WHERE id = :id");
                 $stmt->execute([
                     ':id' => $this->id,
                     ':name' => $this->name,
-                    ':category_id' => $this->category_id
+                    ':category_id' => $this->category_id,
+                    ':deleted' => $this->deleted,
                 ]);
             } else {
                 // save new registry
@@ -176,10 +189,11 @@ class Category
         return $response;
     }
 
-    public function getSubcategories()
+    public function getSubcategories($includeDeleted = false)
     {
+        $deletedSql = $includeDeleted ? '' : 'AND deleted = 0';
         try {
-            $stmt = self::db()->prepare("SELECT * FROM categories WHERE category_id = :category_id");
+            $stmt = self::db()->prepare("SELECT * FROM categories WHERE category_id = :category_id $deletedSql ");
             $stmt->execute([':category_id' => $this->id]);
             $stmt->setFetchMode(PDO::FETCH_CLASS, "Category");
             if ($stmt->rowCount() > 0) {

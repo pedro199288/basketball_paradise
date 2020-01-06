@@ -13,7 +13,6 @@ checkPermisos($currentUser, ['admin', 'moderador']);
 
 // Get all categories to show in table
 $categories = Category::getAll(false, true);
-// TODO: MOSTRAR LAS DELETED DE OTRA FORMA EN LA TABLA y dar opción de rehabilitar categoría
 $pag = (isset($_GET['pag']) && is_numeric($_GET['pag'])) ? $_GET['pag'] : 1;
 $totalCategories = count($categories);
 $rowRegistries = 6;
@@ -49,7 +48,7 @@ $categories = array_filter($categories, function($p) use ($displacement, $rowReg
                 </thead>
                 <tbody>
                     <?php foreach ($categories as $category) : ?>
-                        <tr>
+                        <tr class="<?= $category->getDeleted() ? 'opacity' : '' ?>">
                             <th scope="row"><?= $category->getId() ?></th>
                             <td><?= $category->getName() ?></td>
                             <td><?php echo (is_numeric($category->getCategoryId()) ?

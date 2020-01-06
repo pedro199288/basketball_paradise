@@ -67,8 +67,13 @@
         <?php if ($currentUser->getRol() != 'cliente') : ?>
             <h5>Opciones de Administrador</h5>
             <div class="mb-4">
-                <a class="nav-link" href="<?=RUTA_HOME?>admin/categorias.php">Ver Categorías</a>
-                <a class="nav-link" href="<?=RUTA_HOME?>admin/productos.php">Ver Productos</a>
+                <a class="nav-link" href="<?=RUTA_HOME?>admin/categorias.php">Administrar Categorías</a>
+                <a class="nav-link" href="<?=RUTA_HOME?>admin/productos.php">Administrar Productos</a>
+                <a class="nav-link" href="<?=RUTA_HOME?>admin/ofertas.php">Administrar Ofertas</a>
+                <a class="nav-link" href="<?=RUTA_HOME?>admin/productos.php">Administrar Pedidos</a>
+                <?php if ($currentUser->getRol() == 'admin') : ?>
+                    <a class="nav-link" href="<?=RUTA_HOME?>admin/productos.php">Administrar Usuarios</a>
+                <?php endif; ?>
             </div>
         <?php endif; ?>
 

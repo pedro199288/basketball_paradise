@@ -41,6 +41,7 @@ $orders = $currentUser->getOrders();
                         ?>
                             <article class="border-top border-bottom py-3 mr-2">
                                 <h4 class="text-center mb-4"><strong>Número identificador del pedido: </strong> <?= $order['id']?></h4>
+                                <p><strong>Nombre y apellido: </strong> <?= $address['name'] . ' '. $address['surname'] ?></p>
                                 <p><strong>Direccion: </strong> <?= $address['address'] . ', '. $address['location'] . ', ' . $address['province'] . ', ' . $address['postal_code'] ?></p>
                                 <p><strong>Método de pago: </strong> <?= $order['payment_method'] ?></p>
                                 <p><strong>Estado: </strong> <?= $order['status'] ?></p>

@@ -27,6 +27,7 @@ switch ($action) {
 
         $name = $_POST['name'] ?? null;
         $category = !empty($_POST['category']) && is_numeric($_POST['category']) ? $_POST['category'] : null;
+        $deleted = !empty($_POST['deleted']) ? 1 : 0;
 
         if (empty($name)) $_SESSION['danger_alerts']['name'] = 'Rellena el campo nombre';
 
@@ -39,6 +40,7 @@ switch ($action) {
             }
             $newCategory->setName($name);
             $newCategory->setCategoryId($category);
+            $newCategory->setDeleted($deleted);
 
             // save category
             $response = $newCategory->save($updating);
@@ -53,8 +55,6 @@ switch ($action) {
         header("Location: " . RUTA_HOME . 'admin/categorias.php');
         die();
         break;
-
-
 
     case 'delete':
         // get the id

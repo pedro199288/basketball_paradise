@@ -112,6 +112,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete') : ?>
                 <input type="file" class="form-control-file" name="image" id="image">
                 <img class="mt-2 rounded px-0 col-sm-4" src="<?= RUTA_HOME . 'assets/img/products/' . ($product && !empty($product->getImage()) ? $product->getImage() : 'default.svg') ?>" alt="<?= $product ? $product->getName() : 'sin imagen' ?>">
             </div>
+            <div class="form-group">
+                <label for="deleted">Is Deleted?</label>
+                <input type="checkbox" name="deleted" id="deleted" <?= $product->getDeleted() ? 'checked' : '' ?>>
+            </div>
             <input type="hidden" name="id" value=<?= $product ?  $product->getId() : null ?>>
             <input type="hidden" name="updating" value=<?= $product ? true : false ?>>
             <button name="action" value="save" type="submit" class="btn btn-primary font-weight-bold">Guardar</button>

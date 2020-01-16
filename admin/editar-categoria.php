@@ -75,7 +75,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete') : ?>
             </div>
             <div class="form-group">
                 <label for="deleted">Is Deleted?</label>
-                <input type="checkbox" name="deleted" id="deleted" <?= $currentCategory->getDeleted() ? 'checked' : '' ?>>
+                <input type="checkbox" name="deleted" id="deleted" <?= ($currentCategory && $currentCategory->getDeleted()) ? 'checked' : '' ?>>
             </div>
 
             <input type="hidden" name="id" value=<?= $currentCategory ?  $currentCategory->getId() : null ?>>

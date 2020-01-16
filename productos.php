@@ -8,6 +8,9 @@ $pageDescriprion = "Explora todos nuestros productos de baloncesto. Zapatillas, 
 
 require './inc/layout/header.php';
 
+
+// TODO: revisar que productos peta con 'camisetas', quizá sea por la paginación, revisarla también
+
 if (isset($_GET['c'])) {
     $currentCategory = Category::getById($_GET['c']);
     $products = [];
@@ -21,6 +24,7 @@ if (isset($_GET['c'])) {
             $products = array_merge($products, Product::getByCategoryId($currentCategory->getId()));
         }
         $products = array_unique($products, SORT_REGULAR);
+        $products = array_values($products);
     } else {
         header("Location: " . RUTA_HOME);
         $_SESSION['danger_alerts'][] = 'Categoría no encontrada';
@@ -29,17 +33,15 @@ if (isset($_GET['c'])) {
     $subTitle = $currentCategory->getName();
 }
 
-
 $pag = (isset($_GET['pag']) && is_numeric($_GET['pag'])) ? $_GET['pag'] : 1;
 $totalProducts = count($products);
 $rowRegistries = 6;
-$totalPags = (int) ($totalProducts/$rowRegistries) +1;
+$totalPags = ceil($totalProducts / $rowRegistries);
 $displacement = ($pag * $rowRegistries) - $rowRegistries;
-$products = array_filter($products, function($p) use ($displacement, $rowRegistries, $pag) {
-    return ($p >= $displacement && $p <$rowRegistries * $pag);
+$products = array_filter($products, function ($p) use ($displacement, $rowRegistries, $pag) {
+    return ($p >= $displacement && $p < $rowRegistries * $pag);
 }, ARRAY_FILTER_USE_KEY);
 
- 
 ?>
 
 <div class="row justify-content-center">
@@ -59,7 +61,7 @@ $products = array_filter($products, function($p) use ($displacement, $rowRegistr
                             <h5 class="card-title"><?= $product->getName() ?></h5>
                             <p class="card-text text-center font-weight-bold card-subtitle text-secondary my-1 h4"><?= $product->getPrice() . ' €' ?></p>
                         </div>
-                        <a href="<?= RUTA_HOME . 'modificar-carrito.php?id='.$product->getId() ?>" class="btn btn-primary btn-block mt-2 align-self-end">Comprar</a>
+                        <a href="<?= RUTA_HOME . 'modificar-carrito.php?id=' . $product->getId() ?>" class="btn btn-primary btn-block mt-2 align-self-end">Comprar</a>
                     </div>
                 </div>
             <?php endforeach; ?>

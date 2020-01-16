@@ -94,14 +94,15 @@ class Category
                     ':id' => $this->id,
                     ':name' => $this->name,
                     ':category_id' => $this->category_id,
-                    ':deleted' => $this->deleted,
+                    ':deleted' => $this->deleted
                 ]);
             } else {
                 // save new registry
-                $stmt = self::db()->prepare("INSERT INTO categories VALUES(null, :name, :category_id)");
+                $stmt = self::db()->prepare("INSERT INTO categories VALUES(null, :name, :category_id, :deleted)");
                 $stmt->execute([
                     ':name' => $this->name,
-                    ':category_id' => $this->category_id
+                    ':category_id' => $this->category_id,
+                    ':deleted' => $this->deleted
                 ]);
             }
             if ($stmt->rowCount() > 0) {

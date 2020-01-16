@@ -16,10 +16,10 @@ $products = Product::getAll(true);
 $pag = (isset($_GET['pag']) && is_numeric($_GET['pag'])) ? $_GET['pag'] : 1;
 $totalProducts = count($products);
 $rowRegistries = 6;
-$totalPags = (int) ($totalProducts/$rowRegistries) +1;
+$totalPags = ceil($totalProducts / $rowRegistries);
 $displacement = ($pag * $rowRegistries) - $rowRegistries;
-$products = array_filter($products, function($p) use ($displacement, $rowRegistries, $pag) {
-    return ($p >= $displacement && $p <$rowRegistries * $pag);
+$products = array_filter($products, function ($p) use ($displacement, $rowRegistries, $pag) {
+    return ($p >= $displacement && $p < $rowRegistries * $pag);
 }, ARRAY_FILTER_USE_KEY);
 
 ?>
@@ -59,7 +59,7 @@ $products = array_filter($products, function($p) use ($displacement, $rowRegistr
                             <td>
                                 <?php foreach ($product->getCategories() as $i => $categoryId) : ?>
                                     <?php $catName = Category::getById($categoryId)->getName(); ?>
-                                    <?= $catName . (count($product->getCategories()) == $i+1 ? '' : ',') ?>
+                                    <?= $catName . (count($product->getCategories()) == $i + 1 ? '' : ',') ?>
                                 <?php endforeach; ?>
                             </td>
                             <td>

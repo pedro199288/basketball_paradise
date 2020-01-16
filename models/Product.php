@@ -134,7 +134,7 @@ class Product
                 ]);
             } else {
                 // save new registry
-                $stmt = self::db()->prepare("INSERT INTO products VALUES(null, :name, :description, :price, :stock, :categories, :image, NOW())");
+                $stmt = self::db()->prepare("INSERT INTO products VALUES(null, :name, :description, :price, :stock, :categories, :image, :deleted, NOW())");
                 $stmt->execute([
                     ':name' => $this->name,
                     ':description' => $this->description,
@@ -142,6 +142,7 @@ class Product
                     ':stock' => $this->stock,
                     ':categories' => $this->categories,
                     ':image' => $this->image,
+                    ':deleted' => $this->deleted,
                 ]);
             }
             if ($stmt->rowCount() > 0) {
@@ -178,7 +179,7 @@ class Product
                 }, $filteredProducts);
             }
             // remove categories from products
-            foreach($filteredProducts as $updatingProduct){
+            foreach ($filteredProducts as $updatingProduct) {
                 $updatingProduct->save(true);
             }
         } catch (Exception $e) {

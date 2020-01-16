@@ -61,9 +61,8 @@ $addresses = $currentUser->getAddresses() ?? null;
                         <div class="form-group">
                             <label for="status"></label>
                             <select class="form-control" name="status" id="status">
-                                <option <?= $currentUser->getRol() == 'activo' ? 'selected' : '' ?> value="activo">activo</option>
-                                <option <?= $currentUser->getRol() == 'inactivo' ? 'selected' : '' ?> value="inactivo">inactivo</option>
-                                <option <?= $currentUser->getRol() == 'borrado' ? 'selected' : '' ?> value="borrado">borrado</option>
+                                <option <?= $currentUser->getRol() == 'active' ? 'selected' : '' ?> value="active">activo</option>
+                                <option <?= $currentUser->getRol() == 'deleted' ? 'selected' : '' ?> value="deleted">borrado</option>
                             </select>
                         </div>
                     <?php else : ?>

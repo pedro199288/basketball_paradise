@@ -84,7 +84,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete') : ?>
                     <option value=null>Sin Categoría</option>
                     <?php foreach ($mainCategories as $mainCategory) : ?>
                         <optgroup label="<?= $mainCategory->getName() ?>">
-                            <?php if($mainCategory->hasSubcategories()): ?>
+                            <?php if ($mainCategory->hasSubcategories()) : ?>
                                 <?php foreach ($mainCategory->getSubcategories() as $secondaryCategory) : ?>
                                     <option <?= in_array($secondaryCategory->getId(), ($product ? $product->getCategories() : [])) ? 'selected' : '' ?> value="<?= $secondaryCategory->getId() ?>">
                                         <?= $secondaryCategory->getName() ?>
@@ -114,7 +114,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete') : ?>
             </div>
             <div class="form-group">
                 <label for="deleted">Is Deleted?</label>
-                <input type="checkbox" name="deleted" id="deleted" <?= $product->getDeleted() ? 'checked' : '' ?>>
+                <input type="checkbox" name="deleted" id="deleted" <?= ($product && $product->getDeleted()) ? 'checked' : '' ?>>
             </div>
             <input type="hidden" name="id" value=<?= $product ?  $product->getId() : null ?>>
             <input type="hidden" name="updating" value=<?= $product ? true : false ?>>

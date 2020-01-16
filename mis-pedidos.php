@@ -33,56 +33,42 @@ $orders = $currentUser->getOrders();
                     </div>
                 </div>
                 <div class="row d-block">
-                    
-                    <?php if ($orders) : ?>
-                        <?php 
-                            foreach($orders as $order): 
-                            $address = $currentUser->getAddressById($order['address']);
-                        ?>
-                            <article class="border-top border-bottom py-3 mr-2">
-                                <h4 class="text-center mb-4"><strong>Número identificador del pedido: </strong> <?= $order['id']?></h4>
-                                <p><strong>Nombre y apellido: </strong> <?= $address['name'] . ' '. $address['surname'] ?></p>
-                                <p><strong>Direccion: </strong> <?= $address['address'] . ', '. $address['location'] . ', ' . $address['province'] . ', ' . $address['postal_code'] ?></p>
-                                <p><strong>Método de pago: </strong> <?= $order['payment_method'] ?></p>
-                                <p><strong>Estado: </strong> <?= $order['status'] ?></p>
-                                <p><strong>Fecha de compra: </strong> <?= $order['purchase_date'] ?></p>
-                                <p><strong>Fecha de envío: </strong> <?= $order['shipping_date']  ?? 'sin enviar' ?></p>
-                                <p><strong>Fecha de entrega: </strong> <?= $order['delivery_date'] ?? 'sin entregar'  ?></p>
-                                <h5>Líneas del pedido:</h5>
-                                <table class="table table-striped table-hover table-responsive w-100">
-                                    <thead>
-                                        <tr>
-                                            <th>Línea</th>
-                                            <th>Nombre producto</th>
-                                            <th>Precio</th>
-                                            <th>Cantidad</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        $totalQtty = 0;
-                                        $totalPrice = 0;
-                                        foreach ($currentUser->getOrderLines($order['id']) as $line) :
-                                            $product = Product::getById($line['product_id']);
-                                            $totalQtty += $line['quantity'];
-                                            $totalPrice += $line['price'];
-                                        ?>
-                                            <tr>
-                                                <td><?= $line['line_number'] ?></td>
-                                                <td><?= $product->getName() ?></td>
-                                                <td><?= $line['price'] ?></td>
-                                                <td><?= $line['quantity'] ?></td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                        <tr>
-                                            <td colspan="2" class="font-weight-bold">Unidades totales: <?= $totalQtty ?></td>
-                                            <td colspan="2" class="font-weight-bold">Precio total: <?= $totalPrice ?>€</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </article>
 
-                        <?php endforeach; ?>
+                    <?php if ($orders) : ?>
+                        <table class="table table-striped table-hover table-responsive col-12">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Identificador</th>
+                                    <th scope="col">Fecha</th>
+                                    <th scope="col">Estado</th>
+                                    <th scope="col">Importe</th>
+                                    <th scope="col">Ver</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                foreach ($orders as $order) :
+
+                                    $address = $currentUser->getAddressById($order['address']);
+                                    $totalPrice = 0;
+                                    foreach ($currentUser->getOrderLines($order['id']) as $line) :
+                                        $product = Product::getById($line['product_id']);
+                                        $totalPrice += $line['price'];
+                                    endforeach;
+                                ?>
+                                    <tr class="<?= $product->getDeleted() ? 'opacity' : '' ?>">
+                                        <th scope="row"><?= $order['id'] ?></th>
+                                        <td><?= $order['purchase_date'] ?></td>
+                                        <td><?= $order['status'] ?></td>
+                                        <td><?= $totalPrice . ' €' ?></td>
+                                        <td>
+                                            <a class="btn btn-secondary" href="ver-pedido.php?id=<?= $order['id']  ?>">Ver</a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+
                     <?php else : ?>
                         <p>No hay pedidos realizados</p>
                     <?php endif; ?>

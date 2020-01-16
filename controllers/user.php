@@ -17,7 +17,7 @@ switch ($action) {
         // user registration
 
         //check if updating
-        $updating = isset($_POST['updating']) ? true : false;
+        $updating = isset($_POST['updating']) ? $_POST['updating'] : false;
 
         // validate fields: dni, email and password
         if (!empty($_POST['dni'])) {
@@ -29,10 +29,10 @@ switch ($action) {
                 // check if dni exists
                 $existeDni = User::getByDni($dni);
 
-                if ($existeDni instanceof User && $currentUser && $existeDni->getDni() == $currentUser->getDni()) 
+                if ($existeDni instanceof User && $currentUser && $existeDni->getDni() == $currentUser->getDni())
                     $updatingCurrentUser = true;
 
-                if (($existeDni instanceof User && !$updating) || ($updating && $existeDni instanceof User && $existeDni->getDni() != $currentUser->getDni())) {
+                if ($currentUser->getRol() != 'admin' && (($existeDni instanceof User && !$updating) || ($updating && $existeDni instanceof User && $existeDni->getDni() != $currentUser->getDni()))) {
                     $_SESSION['danger_alerts']['dni'] = 'El DNI ya existe';
                 }
             }
@@ -47,7 +47,7 @@ switch ($action) {
             $existeEmail = User::getByEmail($email);
             if ($existeEmail instanceof User && $currentUser && $existeEmail->getEmail() == $currentUser->getEmail()) $updatingCurrentUser = true;
 
-            if (($existeEmail instanceof User  && !$updating) || ($updating && $existeEmail instanceof User && $existeEmail->getEmail() != $currentUser->getEmail())) {
+            if ($currentUser->getRol() != 'admin' && (($existeEmail instanceof User  && !$updating) || ($updating && $existeEmail instanceof User && $existeEmail->getEmail() != $currentUser->getEmail()))) {
                 $_SESSION['danger_alerts']['email'] = 'El email ya existe';
             }
         } else {
@@ -66,11 +66,12 @@ switch ($action) {
             }
         }
 
-
+        $dni = $_POST['dni'] ?? null;
         $name = $_POST['name'] ?? null;
+        $email = $_POST['email'] ?? null;
         $surname = $_POST['surname'] ?? null;
         $rol = $_POST['rol'] ?? 'cliente';
-        $status = $_POST['status'] ?? 'activo';
+        $status = $_POST['status'] ?? 'active';
 
         // store filled fields
         $_SESSION['filled'] = [
@@ -89,6 +90,7 @@ switch ($action) {
             if ($updating) {
                 $newUser = $existeDni;
             }
+            
             $newUser->setDni($dni);
             $newUser->setName($name);
             $newUser->setSurname($surname);
@@ -157,17 +159,17 @@ switch ($action) {
         die();
         break;
 
-    
+
     case 'delete':
         //user login
         $dni = $_GET['dni'] ?? null;
 
-        if($dni) {
+        if ($dni) {
             $response = User::delete($dni);
-            if($response['type'] == 'success') {
+            if ($response['type'] == 'success') {
                 $_SESSION['success_alerts'][] =  $response['message'];
                 $_SESSION['user'] = null;
-            }else {
+            } else {
                 $_SESSION['danger_alerts'][] = $response['message'];
             }
         } else {

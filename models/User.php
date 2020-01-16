@@ -136,7 +136,7 @@ class User
     public static function delete($dni)
     {
         try {
-            $stmt = self::db()->prepare("UPDATE users SET status = 'borrado' WHERE dni = :dni");
+            $stmt = self::db()->prepare("UPDATE users SET status = 'deleted' WHERE dni = :dni");
             $stmt->execute([':dni' => $dni]);
 
             if ($stmt->rowCount() > 0) {
@@ -161,6 +161,7 @@ class User
                 return $user;
             } else {
                 $response =  ['type' => 'error', 'message' => 'No se ha encontrado el cliente'];
+                return false;
             }
         } catch (Exception $e) {
             $response =  ['type' => 'error', 'message' => 'Ha surgido un error: ' . $e->getMessage()];
@@ -179,6 +180,7 @@ class User
                 return $user;
             } else {
                 $response =  ['type' => 'error', 'message' => 'No se ha encontrado el cliente'];
+                return false;
             }
         } catch (Exception $e) {
             $response =  ['type' => 'error', 'message' => 'Ha surgido un error: ' . $e->getMessage()];
@@ -284,11 +286,28 @@ class User
     public function getOrders()
     {
         try {
-            $stmt = self::db()->prepare("SELECT * FROM orders WHERE user_dni = :user_dni");
+            $stmt = self::db()->prepare("SELECT * FROM orders WHERE user_dni = :user_dni ORDER BY purchase_date DESC");
             $stmt->execute([':user_dni' => $this->dni]);
             if ($stmt->rowCount() > 0) {
                 $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 return $orders;
+            } else {
+                return null;
+            }
+        } catch (Exception $e) {
+            $_SESSION['danger_alerts'][] = 'Ha surgido un error: ' . $e->getMessage();
+            return null;
+        }
+    }
+
+    public static function getOrderById($id)
+    {
+        try {
+            $stmt = self::db()->prepare("SELECT * FROM orders WHERE id = :id");
+            $stmt->execute([':id' => $id]);
+            if ($stmt->rowCount() > 0) {
+                $order = $stmt->fetch(PDO::FETCH_ASSOC);
+                return $order;
             } else {
                 return null;
             }
@@ -314,6 +333,4 @@ class User
             return null;
         }
     }
-
-
 }

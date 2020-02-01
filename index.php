@@ -48,7 +48,11 @@ $products = array_filter($products, function ($p) use ($displacement, $rowRegist
                 </div>
             <?php endforeach; ?>
         </div>
-        <?php require './inc/pagination.php'; ?>
+        <?php
+            if($totalProducts > $rowRegistries) 
+                require './inc/pagination.php'; 
+        ?>
+            
     </div>
     <!-- Aside right -->
     <?php require './inc/layout/aside-right.php'; ?>

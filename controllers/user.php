@@ -276,6 +276,17 @@ switch ($action) {
         die();
         break;
 
+    case 'orderStatus':
+        // change status of order
+        $newStatus = $_POST['status'];
+        $orderId = $_POST['orderId'];
+
+        User::setOrderStatus($orderId, $newStatus);
+        header("Location: " . RUTA_HOME . 'admin/pedidos.php');
+        die();
+
+        break;
+
 
     default:
         echo 'nada';

@@ -2,14 +2,14 @@
 /** 
  * Change variables for title and description
  */
-$pageTitle = "Mis pedidos";
-$pageDescriprion = "Visualiza el estado de tus pedidos";
+$pageTitle = "Pedidos de clientes";
+$pageDescriprion = "Visualiza el estado de todos los pedidos";
 
-require './inc/layout/header.php';
+require '../inc/layout/header.php';
 
 // check permissions
-checkPermisos($currentUser, ['cliente', 'admin', 'moderador']);
-$orders = $currentUser->getOrders();
+checkPermisos($currentUser, ['admin', 'moderador']);
+$orders = User::getAllOrders();
 
 ?>
 
@@ -18,12 +18,12 @@ $orders = $currentUser->getOrders();
 </div>
 <div class="row">
     <!-- Aside left -->
-    <?php require './inc/layout/aside-left.php'; ?>
+    <?php require '../inc/layout/aside-left.php'; ?>
     <div class="col-md-7 border-right">
         <main>
             <section class="mb-5">
                 <div class="row">
-                    <h2>Mis pedidos</h2>
+                    <h2>Admin pedidos</h2>
                 </div>
                 <div class="row">
                     <div class="col-12 d-flex justify-content-between mb-3">
@@ -46,8 +46,6 @@ $orders = $currentUser->getOrders();
                             <tbody>
                                 <?php
                                 foreach ($orders as $order) :
-
-                                    $address = $currentUser->getAddressById($order['address']);
                                     $totalPrice = 0;
                                     foreach ($currentUser->getOrderLines($order['id']) as $line) :
                                         $product = Product::getById($line['product_id']);
@@ -57,11 +55,22 @@ $orders = $currentUser->getOrders();
                                     <tr class="<?= $product->getDeleted() ? 'opacity' : '' ?>">
                                         <th scope="row"><?= $order['id'] ?></th>
                                         <td><?= $order['purchase_date'] ?></td>
-                                        <td><?= $order['status'] ?></td>
+                                    <form action="<?= RUTA_HOME . 'controllers/user.php' ?>" method="POST">
+                                        <td>
+                                        <?= $order['status'] ?>
+                                            <select name="status" id="status">
+                                                <option <?= $order['status'] == 'realizado' ? 'selected' : '' ?> value="realizado">realizado</option>
+                                                <option <?= $order['status'] == 'enviado' ? 'selected' : '' ?> value="enviado">enviado</option>
+                                                <option <?= $order['status'] == 'entregado' ? 'selected' : '' ?> value="entregado">entregado</option>
+                                            </select>
+                                        </td>
                                         <td><?= $totalPrice . ' €' ?></td>
                                         <td>
-                                            <a class="btn btn-secondary" href="ver-pedido.php?id=<?= $order['id']  ?>">Ver</a>
-                                        </td>
+                                            <input type="hidden" name="action" value="orderStatus">
+                                            <input type="hidden" name="orderId" value="<?= $order['id'] ?>">
+                                            <input class="btn btn-primary" type="submit" value="Cambiar estado">
+                                        </td>                                    
+                                    </form>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -76,10 +85,10 @@ $orders = $currentUser->getOrders();
         </main>
     </div>
     <!-- Aside right -->
-    <?php require './inc/layout/aside-right.php'; ?>
+    <?php require '../inc/layout/aside-right.php'; ?>
 </div>
 
 
 <?php
-require './inc/layout/footer.php';
+require '../inc/layout/footer.php';
 ?>

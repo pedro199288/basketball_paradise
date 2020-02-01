@@ -283,6 +283,23 @@ class User
         return $response;
     }
 
+    static public function getAllOrders()
+    {
+        try {
+            $stmt = self::db()->prepare("SELECT * FROM orders ORDER BY purchase_date DESC");
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                return $orders;
+            } else {
+                return null;
+            }
+        } catch (Exception $e) {
+            $_SESSION['danger_alerts'][] = 'Ha surgido un error: ' . $e->getMessage();
+            return null;
+        }
+    }
+
     public function getOrders()
     {
         try {
@@ -333,4 +350,21 @@ class User
             return null;
         }
     }
+
+    public static function setOrderStatus($orderId, $newStatus)
+    {
+        try {
+            $stmt = self::db()->prepare("UPDATE orders SET status = :status WHERE id = :orderId ");
+            $stmt->execute([':orderId' => $orderId, ':status' => $newStatus]);
+            if ($stmt->rowCount() > 0) {
+                $_SESSION['success_alerts'][] = 'Estado del pedido cambiado';
+            } else {
+                $_SESSION['danger_alerts'][] = 'No se ha cambiado el estado';
+            }
+        } catch (Exception $e) {
+            $_SESSION['danger_alerts'][] = 'Ha surgido un error: ' . $e->getMessage();
+            return null;
+        }
+    }
+    
 }

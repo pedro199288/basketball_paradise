@@ -70,7 +70,7 @@
                 <a class="nav-link" href="<?= RUTA_HOME ?>admin/categorias.php">Administrar Categorías</a>
                 <a class="nav-link" href="<?= RUTA_HOME ?>admin/productos.php">Administrar Productos</a>
                 <a class="nav-link" href="<?= RUTA_HOME ?>admin/ofertas.php">Administrar Ofertas</a>
-                <a class="nav-link" href="<?= RUTA_HOME ?>admin/productos.php">Administrar Pedidos</a>
+                <a class="nav-link" href="<?= RUTA_HOME ?>admin/pedidos.php">Administrar Pedidos</a>
                 <?php if ($currentUser->getRol() == 'admin') : ?>
                     <a class="nav-link" href="<?= RUTA_HOME ?>admin/usuarios.php">Administrar Usuarios</a>
                 <?php endif; ?>

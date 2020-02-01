@@ -30,10 +30,6 @@ $links = [
         'link' => RUTA_HOME . 'index.php'
     ],
     [
-        'text' => 'Ofertas',
-        'link' => RUTA_HOME . 'ofertas.php'
-    ],
-    [
         'text' => 'Quienes Somos',
         'link' => RUTA_HOME . 'quienes-somos.php'
     ],

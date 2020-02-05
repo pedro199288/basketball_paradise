@@ -1,4 +1,5 @@
 <?php
+
 /** 
  * Change variables for title and description
  */
@@ -55,22 +56,21 @@ $orders = User::getAllOrders();
                                     <tr class="<?= $product->getDeleted() ? 'opacity' : '' ?>">
                                         <th scope="row"><?= $order['id'] ?></th>
                                         <td><?= $order['purchase_date'] ?></td>
-                                    <form action="<?= RUTA_HOME . 'controllers/user.php' ?>" method="POST">
-                                        <td>
-                                        <?= $order['status'] ?>
-                                            <select name="status" id="status">
-                                                <option <?= $order['status'] == 'realizado' ? 'selected' : '' ?> value="realizado">realizado</option>
-                                                <option <?= $order['status'] == 'enviado' ? 'selected' : '' ?> value="enviado">enviado</option>
-                                                <option <?= $order['status'] == 'entregado' ? 'selected' : '' ?> value="entregado">entregado</option>
-                                            </select>
-                                        </td>
-                                        <td><?= $totalPrice . ' €' ?></td>
-                                        <td>
-                                            <input type="hidden" name="action" value="orderStatus">
-                                            <input type="hidden" name="orderId" value="<?= $order['id'] ?>">
-                                            <input class="btn btn-primary" type="submit" value="Cambiar estado">
-                                        </td>                                    
-                                    </form>
+                                        <form action="<?= RUTA_HOME . 'controllers/user.php' ?>" method="POST">
+                                            <td>
+                                                <select name="status" id="status">
+                                                    <option <?= $order['status'] == 'realizado' ? 'selected' : '' ?> value="realizado">realizado</option>
+                                                    <option <?= $order['status'] == 'enviado' ? 'selected' : '' ?> value="enviado">enviado</option>
+                                                    <option <?= $order['status'] == 'entregado' ? 'selected' : '' ?> value="entregado">entregado</option>
+                                                </select>
+                                            </td>
+                                            <td><?= $totalPrice . ' €' ?></td>
+                                            <td>
+                                                <input type="hidden" name="action" value="orderStatus">
+                                                <input type="hidden" name="orderId" value="<?= $order['id'] ?>">
+                                                <input class="btn btn-primary" type="submit" value="Cambiar estado">
+                                            </td>
+                                        </form>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
